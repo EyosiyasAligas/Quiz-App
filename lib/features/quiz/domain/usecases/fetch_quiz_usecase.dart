@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:quiz_app/features/quiz/domain/entities/quiz_entity.dart';
 
+import '../../../../core/network/errors/failures.dart';
+import '../entities/question_entity.dart';
 import '../repositories/abstract_quiz_repository.dart';
 
 class FetchQuizUseCase {
@@ -8,8 +9,8 @@ class FetchQuizUseCase {
 
   FetchQuizUseCase(this.repository);
 
-  Future<Either<Exception, List<QuizEntity>>> call() async {
-    final result = await repository.fetchQuiz();
+  Future<Either<Failure, List<QuestionEntity>>> call() async {
+    final result = await repository.fetchQuestions();
     return result.fold((l) {
       return Left(l);
     }, (r) async {

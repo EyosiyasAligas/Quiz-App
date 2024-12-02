@@ -1,12 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:quiz_app/features/quiz/data/models/question_model.dart';
 
-import '../../models/quiz_model.dart';
+import '../../models/category_model.dart';
 
 abstract class AbstractQuizApi {
 
 
-  Future<List<QuizModel>> fetchQuiz();
+  Future<List<CategoryModel>> fetchCategory();
 
-  Future<QuizModel> addQuiz(QuizModel quiz);
+  Future<List<QuestionModel>> fetchQuestions();
 }

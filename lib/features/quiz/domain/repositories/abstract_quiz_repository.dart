@@ -1,15 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:quiz_app/features/quiz/domain/entities/question_entity.dart';
 
-import '../entities/quiz_entity.dart';
+import '../../../../core/network/errors/failures.dart';
+import '../entities/category_entity.dart';
 
 abstract class AbstractQuizRepository {
-  // fetch all quiz
-  Future<Either<Exception, List<QuizEntity>>> fetchQuiz();
+  // fetch all categories
+  Future<Either<Failure, List<CategoryEntity>>> fetchCategories();
 
-  // add quiz
-  Future<Either<Exception, QuizEntity>> addQuiz(QuizEntity quiz);
-
-// update quiz
-
-// delete quiz
+  // fetch all questions
+  Future<Either<Failure, List<QuestionEntity>>> fetchQuestions();
 }
