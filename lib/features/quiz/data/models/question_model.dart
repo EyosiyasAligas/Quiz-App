@@ -1,7 +1,7 @@
 import '../../domain/entities/question_entity.dart';
 
 class QuestionModel extends QuestionEntity {
-  QuestionModel({
+  const QuestionModel({
     required super.type,
     required super.difficulty,
     required super.category,

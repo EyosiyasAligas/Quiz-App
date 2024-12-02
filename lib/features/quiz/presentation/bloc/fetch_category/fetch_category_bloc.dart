@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:quiz_app/core/utils/usecase.dart';
 import 'package:quiz_app/features/quiz/domain/entities/category_entity.dart';
+import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
 import '../../../domain/usecases/fetch_category_usecase.dart';
 
@@ -17,7 +19,7 @@ class FetchCategoryBloc extends Bloc<FetchCategoryEvent, FetchCategoryState> {
 
   void fetchCategory(FetchCategory event, Emitter<FetchCategoryState> emit) async {
     emit(FetchCategoryLoadInProgress());
-    final result = await fetchCategoryUseCase();
+    final result = await fetchCategoryUseCase(NoParams());
     result.fold(
       (failure) => emit(FetchCategoryLoadFailure(failure.errorMessage)),
       (category) => emit(FetchCategoryLoadSuccess(category)),

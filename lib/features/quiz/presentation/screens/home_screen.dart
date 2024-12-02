@@ -25,19 +25,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<FetchCategoryBloc>().add(const FetchCategory());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Screen'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, Routes.quizScreen);
-          },
-          child: const Text('Start Quiz'),
-        ),
+      body: BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
+        builder: (context, state) {
+          if (state is FetchCategoryLoadInProgress) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is FetchCategoryLoadSuccess) {
+            return ListView.builder(
+              itemCount: state.categories.length,
+              itemBuilder: (context, index) {
+                final category = state.categories[index];
+                return ListTile(
+                  leading: Text(category.id.toString()),
+                  title: Text(category.name),
+                  onTap: () {},
+                );
+              },
+            );
+          } else if (state is FetchCategoryLoadFailure) {
+            return Center(
+              child: Text(state.message),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
     );
   }
