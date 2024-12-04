@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:quiz_app/features/quiz/domain/entities/question_entity.dart';
 import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
-import '../../../domain/entities/category_entity.dart';
 import '../../../domain/usecases/fetch_quiz_usecase.dart';
 
 part 'fetch_question_event.dart';

@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quiz_app/core/theme/app_theme.dart';
-import 'package:quiz_app/core/utils/theme_mode_cubit.dart';
+import 'package:lottie/lottie.dart';
+import 'package:quiz_app/features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
 
-import '../../../../core/route/router.dart';
-import '../../../../core/utils/helper.dart';
 import '../../../../shared/service_locator.dart';
+import '../bloc/choose_preference/choose_preference_cubit.dart';
 import '../bloc/fetch_category/fetch_category_bloc.dart';
+import '../widgets/choose_preference_container.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static Route route(RouteSettings routeSettings) {
     return MaterialPageRoute(
-      builder: (_) => BlocProvider(
-        create: (context) => sl.get<FetchCategoryBloc>(),
+      builder: (_) => MultiBlocProvider(
+        providers: [
+          BlocProvider<FetchCategoryBloc>(
+            create: (context) => sl<FetchCategoryBloc>(),
+          ),
+          BlocProvider(
+            create: (context) => sl<ChoosePreferenceCubit>(),
+          ),
+          BlocProvider(
+            create: (context) => sl<FetchQuestionBloc>(),
+          ),
+        ],
         child: const HomeScreen(),
       ),
     );
@@ -25,7 +35,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -42,21 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
         builder: (context, state) {
           if (state is FetchCategoryLoadInProgress) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Lottie.asset(
+                'assets/json/loading.json',
+                frameRate: FrameRate.max,
+                fit: BoxFit.cover,
+              ),
             );
           } else if (state is FetchCategoryLoadSuccess) {
-            return ListView.builder(
-              itemCount: state.categories.length,
-              itemBuilder: (context, index) {
-                final category = state.categories[index];
-                return ListTile(
-                  leading: Text(category.id.toString()),
-                  title: Text(category.name),
-                  onTap: () {},
-                );
-              },
-            );
+            return ChoosePreferenceContainer(categoryItems: state.categories);
           } else if (state is FetchCategoryLoadFailure) {
             return Center(
               child: Text(state.message),

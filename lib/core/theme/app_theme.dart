@@ -13,6 +13,18 @@ ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 final ThemeData appTheme = ThemeData(
   dialogBackgroundColor: AppColors.lightGray,
   cardColor: AppColors.dark,
+  dropdownMenuTheme: DropdownMenuThemeData(
+    textStyle: AppTextStyle.mediumBlack,
+    inputDecorationTheme: InputDecorationTheme(
+      enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+    color: AppColors.gray,
+      width: 1,
+    ),
+    borderRadius: BorderRadius.circular(10),
+  ),
+    )
+  ),
   appBarTheme: AppBarTheme(
     // shadowColor: AppColors.lightGray,
     color: AppColors.white,
@@ -50,6 +62,7 @@ final ThemeData appTheme = ThemeData(
   ),
   colorScheme: ColorScheme.fromSeed(
     contrastLevel: 1.0,
+    brightness: Brightness.light,
     seedColor: AppColors.primary,
     primary: AppColors.primary,
   ).copyWith(
@@ -80,6 +93,25 @@ final ThemeData appTheme = ThemeData(
 final ThemeData darkAppTheme = ThemeData(
   dialogBackgroundColor: AppColors.dark,
   cardColor: AppColors.primary.withOpacity(0.5),
+  dropdownMenuTheme: DropdownMenuThemeData(
+    textStyle: AppTextStyle.mediumWhite,
+    inputDecorationTheme: InputDecorationTheme(
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: AppColors.lightGray,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: AppColors.secondary.withOpacity(0.5),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+  ),
   appBarTheme: AppBarTheme(
     shadowColor: AppColors.lightGray,
     color: AppColors.dark,
@@ -120,6 +152,7 @@ final ThemeData darkAppTheme = ThemeData(
   ),
   colorScheme: ColorScheme.fromSeed(
     contrastLevel: 1.0,
+    brightness: Brightness.dark,
     seedColor: AppColors.primary,
     primary: AppColors.primary,
   ).copyWith(

@@ -22,7 +22,7 @@ class QuizImplApi extends AbstractQuizApi {
       return List<Map<String, dynamic>>.from(result.data['trivia_categories'])
           .map((e) => CategoryModel.fromJson(e))
           .toList();
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);
@@ -37,11 +37,19 @@ class QuizImplApi extends AbstractQuizApi {
   }
 
   @override
-  Future<List<QuestionModel>> fetchQuestions(QuizParamsModel params) {
+  Future<List<QuestionModel>> fetchQuestions(QuizParamsModel params) async {
     try {
-      // fetch data from api
-      return Future.value([]);
-    } on DioError catch (e) {
+      final result = await dio.get(
+        '$authBaseUrl/api.php',
+        queryParameters: params.toQueryParameters(),
+        options: Options(responseType: ResponseType.json),
+      );
+      print('params: ${params.toQueryParameters()}');
+      print('fetchedQuestions: ${result}');
+      return List<Map<String, dynamic>>.from(result.data['results'])
+          .map((e) => QuestionModel.fromJson(e))
+          .toList();
+    } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);

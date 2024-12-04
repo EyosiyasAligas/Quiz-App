@@ -21,7 +21,7 @@ class QuizRepositoryImplementation extends AbstractQuizRepository {
     try {
       final result = await api.fetchCategory();
 
-      return Right(result);
+      return Right(result..insert(0, const CategoryModel(id: -1, name: 'Any')));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.statusCode));
     } catch (e) {
@@ -32,14 +32,12 @@ class QuizRepositoryImplementation extends AbstractQuizRepository {
   @override
   Future<Either<Failure, List<QuestionModel>>> fetchQuestions(
       QuizParams params) async {
-
     final QuizParamsModel paramsModel = QuizParamsModel(
       amount: params.amount,
       categoryId: params.categoryId,
       difficulty: params.difficulty,
       type: params.type,
     );
-
 
     try {
       final result = await api.fetchQuestions(paramsModel);

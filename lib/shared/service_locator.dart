@@ -8,6 +8,7 @@ import '../features/quiz/data/repositories/quiz_repository_impl.dart';
 import '../features/quiz/domain/repositories/abstract_quiz_repository.dart';
 import '../features/quiz/domain/usecases/fetch_category_usecase.dart';
 import '../features/quiz/domain/usecases/fetch_quiz_usecase.dart';
+import '../features/quiz/presentation/bloc/choose_preference/choose_preference_cubit.dart';
 import '../features/quiz/presentation/bloc/fetch_category/fetch_category_bloc.dart';
 import '../features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
 
@@ -30,6 +31,7 @@ Future<void> initAppInjections() async {
 
   // Bloc
   sl.registerFactory<ThemeModeCubit>(() => ThemeModeCubit(ThemeMode.system));
+  sl.registerFactory<ChoosePreferenceCubit>(() => ChoosePreferenceCubit());
   sl.registerFactory<FetchQuestionBloc>(() => FetchQuestionBloc(sl<FetchQuizUseCase>()));
   sl.registerFactory<FetchCategoryBloc>(() => FetchCategoryBloc(sl<FetchCategoryUseCase>()));
 }
