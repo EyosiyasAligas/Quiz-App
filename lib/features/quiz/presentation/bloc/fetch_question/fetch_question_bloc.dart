@@ -18,9 +18,13 @@ class FetchQuestionBloc extends Bloc<FetchQuestionEvent, FetchQuestionState> {
   fetchQuestion(FetchQuestion event, Emitter<FetchQuestionState> emitter) async {
     emitter(FetchQuestionLoadInProgress());
     final result = await _fetchQuizUseCase.call(event.quizParams);
-    result.fold(
-      (l) => emitter(FetchQuestionLoadFailure(l.toString())),
-      (r) => emitter(FetchQuestionLoadSuccess(r)),
-    );
+    try {
+      result.fold(
+        (failure) => emitter(FetchQuestionLoadFailure(failure.errorMessage)),
+        (questions) => emitter(FetchQuestionLoadSuccess(questions)),
+      );
+    } catch (e) {
+      emitter(FetchQuestionLoadFailure(e.toString()));
+    }
   }
 }

@@ -8,9 +8,9 @@ class QuestionEntity extends Equatable {
   final String correctAnswer;
   final List<String> incorrectAnswers;
   final List<String> options;
-  final String? selectedAnswer;
+  String? selectedAnswer;
 
-  const QuestionEntity({
+  QuestionEntity({
     required this.type,
     required this.difficulty,
     required this.category,
@@ -18,7 +18,7 @@ class QuestionEntity extends Equatable {
     required this.correctAnswer,
     required this.incorrectAnswers,
     required this.options,
-    this.selectedAnswer,
+    this.selectedAnswer = '',
   });
 
   @override

@@ -10,7 +10,7 @@ bool isIntegrationTest = false;
 
 Future<void> theAppIsRunning(WidgetTester tester) async {
   if (isIntegrationTest) {
-    await tester.pumpWidget(const app.MyApp());
+    await tester.pumpWidget(const app.QuizApp());
     await tester.pumpAndSettle();
   } else {
     app.main();

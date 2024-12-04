@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
 
 import '../../../../core/route/router.dart';
+import '../../../../core/utils/helper.dart';
 import '../../../../shared/presentation/widgets/custom_button.dart';
 import '../../domain/entities/quiz_enums.dart';
 import '../../domain/entities/quiz_params.dart';
@@ -64,9 +65,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    params = context
-        .read<ChoosePreferenceCubit>()
-        .currentParams;
+    params = context.read<ChoosePreferenceCubit>().currentParams;
 
     categoryController.text = widget.categoryItems.first.name;
     difficultyController.text = QuizDifficulty.any.value!;
@@ -204,7 +203,6 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-
         GestureDetector(
           onTap: () {
             setState(() {
@@ -218,7 +216,15 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
             increaseOrDecrease(params.amount!, false);
           },
           onLongPressUp: stopIncreaseOrDecrease,
-          child: const Icon(Icons.remove),
+          child: CircleAvatar(
+            backgroundColor: themeData.colorScheme.secondary.withOpacity(0.6),
+            radius: 12,
+            foregroundColor: themeData.colorScheme.onSecondary,
+            child: const Icon(
+              Icons.remove,
+              size: 20,
+            ),
+          ),
         ),
         const SizedBox(width: 10),
         DropdownMenu(
@@ -226,7 +232,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
           trailingIcon: null,
           leadingIcon: null,
           textAlign: TextAlign.end,
-          menuHeight: size.height * 0.5,
+          menuHeight: size.height * 0.35,
           controller: amountController,
           inputDecorationTheme: const InputDecorationTheme(
             enabledBorder: OutlineInputBorder(
@@ -260,7 +266,15 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
             increaseOrDecrease(params.amount!, true);
           },
           onLongPressUp: stopIncreaseOrDecrease,
-          child: const Icon(Icons.add),
+          child: CircleAvatar(
+            backgroundColor: themeData.colorScheme.secondary.withOpacity(0.6),
+            radius: 12,
+            foregroundColor: themeData.colorScheme.onSecondary,
+            child: const Icon(
+              Icons.add,
+              size: 20,
+            ),
+          ),
         ),
       ],
     );
@@ -270,17 +284,26 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
     return BlocConsumer<FetchQuestionBloc, FetchQuestionState>(
       listener: (context, state) {
         if (state is FetchQuestionLoadSuccess) {
-          Navigator.of(context).pushNamed(Routes.quizScreen, arguments: state.questions);
+          Navigator.of(context).pushReplacementNamed(
+            Routes.quizScreen,
+            arguments: {
+              'questions': state.questions,
+              'category': categoryController.text == 'Any'
+                  ? 'Random'
+                  : categoryController.text,
+            },
+          );
+        } else if (state is FetchQuestionLoadFailure) {
+          Helper.showSnackBar(context, state.errorMessage, isError: true);
         }
       },
       builder: (context, state) {
         bool isLoading = state is FetchQuestionLoadInProgress;
         return CustomButton(
-          text: 'Start Quiz',
-          isLoading: isLoading,
-          alignment: Alignment.center,
-          onPressed: () => isLoading ? null : startQuiz()
-        );
+            text: 'Start Quiz',
+            isLoading: isLoading,
+            alignment: Alignment.center,
+            onPressed: () => isLoading ? null : startQuiz());
       },
     );
   }

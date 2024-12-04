@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'local_storage_constants.dart';
+import '../../../../core/utils/local_storage_constants.dart';
 
 class ThemeModeCubit extends Cubit<ThemeMode> {
   ThemeModeCubit(super.initialState);

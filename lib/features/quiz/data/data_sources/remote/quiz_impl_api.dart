@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:quiz_app/core/network/errors/exceptions.dart';
 import 'package:quiz_app/features/quiz/data/models/quiz_params_model.dart';
 
-import '../../../../../core/network/errors/failures.dart';
 import '../../../../../core/utils/network_constants.dart';
 import '../../models/question_model.dart';
 import '../../models/category_model.dart';
@@ -44,8 +43,10 @@ class QuizImplApi extends AbstractQuizApi {
         queryParameters: params.toQueryParameters(),
         options: Options(responseType: ResponseType.json),
       );
-      print('params: ${params.toQueryParameters()}');
-      print('fetchedQuestions: ${result}');
+      if(result.data['response_code'] == 1) {
+        throw ServerException('No questions found', 404);
+      }
+      debugPrint('fetchedQuestions: ${result.data}');
       return List<Map<String, dynamic>>.from(result.data['results'])
           .map((e) => QuestionModel.fromJson(e))
           .toList();

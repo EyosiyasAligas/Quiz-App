@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:quiz_app/core/utils/theme_mode_cubit.dart';
 
 import 'core/route/router.dart';
 import 'core/theme/app_theme.dart';
-import 'core/utils/helper.dart';
 import 'core/utils/local_storage_constants.dart';
+import 'shared/presentation/bloc/theme_mode/theme_mode_cubit.dart';
+import 'core/utils/ui_constants.dart';
 import 'features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
-import 'features/quiz/presentation/screens/quiz_screen.dart';
 import 'shared/service_locator.dart';
 
 Future<void> main() async {
@@ -20,12 +19,12 @@ Future<void> main() async {
   await Hive.openBox(themeModeKey);
 
   runApp(
-    const MyApp(),
+    const QuizApp(),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key, required});
+class QuizApp extends StatelessWidget {
+  const QuizApp({super.key, required});
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +46,8 @@ class MyApp extends StatelessWidget {
             builder: (context, child) {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
+                navigatorKey: rootNavigatorKey,
+                scaffoldMessengerKey: messengerKey,
                 title: 'Quiz App',
                 theme: appTheme,
                 darkTheme: darkAppTheme,

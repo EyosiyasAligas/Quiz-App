@@ -21,7 +21,7 @@ class QuizRepositoryImplementation extends AbstractQuizRepository {
     try {
       final result = await api.fetchCategory();
 
-      return Right(result..insert(0, const CategoryModel(id: -1, name: 'Any')));
+      return Right(result..insert(0,  CategoryModel(id: -1, name: 'Any')));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.statusCode));
     } catch (e) {

@@ -21,6 +21,11 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+    rules:
+      - always_put_required_named_parameters_first
+      - annotate_overrides
+      - avoid_redundant_argument_values
+      - type_annotate_public_apis
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 

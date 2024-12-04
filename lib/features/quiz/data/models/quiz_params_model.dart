@@ -15,7 +15,7 @@ class QuizParamsModel extends QuizParams {
 
 
     if (amount != null) queryParams['amount'] = amount;
-    if (categoryId != null) queryParams['category'] = categoryId;
+    if (categoryId != null && categoryId != -1) queryParams['category'] = categoryId;
     if (difficulty != null && difficulty?.value != 'Any') queryParams['difficulty'] = difficulty?.value!.toLowerCase();
     if (type != null && type?.value != 'Any') queryParams['type'] = type == QuizType.trueFalse ? 'boolean' : 'multiple';
 

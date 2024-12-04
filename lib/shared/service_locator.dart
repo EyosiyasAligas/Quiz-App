@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:quiz_app/features/quiz/presentation/bloc/submit_quiz/submit_quiz_bloc.dart';
 
-import '../core/utils/theme_mode_cubit.dart';
+import 'presentation/bloc/theme_mode/theme_mode_cubit.dart';
 import '../features/quiz/data/data_sources/remote/quiz_impl_api.dart';
 import '../features/quiz/data/repositories/quiz_repository_impl.dart';
 import '../features/quiz/domain/repositories/abstract_quiz_repository.dart';
@@ -34,4 +35,5 @@ Future<void> initAppInjections() async {
   sl.registerFactory<ChoosePreferenceCubit>(() => ChoosePreferenceCubit());
   sl.registerFactory<FetchQuestionBloc>(() => FetchQuestionBloc(sl<FetchQuizUseCase>()));
   sl.registerFactory<FetchCategoryBloc>(() => FetchCategoryBloc(sl<FetchCategoryUseCase>()));
+  sl.registerFactory<SubmitQuizBloc>(() => SubmitQuizBloc());
 }

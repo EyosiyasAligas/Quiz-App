@@ -7,9 +7,10 @@ import '../../../../shared/service_locator.dart';
 import '../bloc/choose_preference/choose_preference_cubit.dart';
 import '../bloc/fetch_category/fetch_category_bloc.dart';
 import '../widgets/choose_preference_container.dart';
+import '../widgets/custom_navigation_bar.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class PreferenceScreen extends StatefulWidget {
+  const PreferenceScreen({super.key});
 
   static Route route(RouteSettings routeSettings) {
     return MaterialPageRoute(
@@ -25,16 +26,16 @@ class HomeScreen extends StatefulWidget {
             create: (context) => sl<FetchQuestionBloc>(),
           ),
         ],
-        child: const HomeScreen(),
+        child: const PreferenceScreen(),
       ),
     );
   }
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<PreferenceScreen> createState() => _PreferenceScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _PreferenceScreenState extends State<PreferenceScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Screen'),
+        title: const Text('Quiz Preferences'),
       ),
       body: BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
         builder: (context, state) {

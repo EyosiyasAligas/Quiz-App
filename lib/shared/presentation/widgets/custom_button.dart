@@ -9,6 +9,7 @@ class CustomButton extends StatelessWidget {
   final Alignment? alignment;
   final String? customKey;
   final bool isLoading;
+  final double? width;
 
   const CustomButton({
     super.key,
@@ -18,12 +19,14 @@ class CustomButton extends StatelessWidget {
     this.alignment,
     this.customKey,
     this.isLoading = false,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       key: Key(customKey ?? ''),
+      width: width,
       alignment: alignment,
       child: ElevatedButton(
         onPressed: onPressed,
