@@ -19,7 +19,7 @@ class FetchCategoryBloc extends Bloc<FetchCategoryEvent, FetchCategoryState> {
 
   void fetchCategory(FetchCategory event, Emitter<FetchCategoryState> emit) async {
     emit(FetchCategoryLoadInProgress());
-    final result = await fetchCategoryUseCase(NoParams());
+    final result = await fetchCategoryUseCase.call(NoParams());
     result.fold(
       (failure) => emit(FetchCategoryLoadFailure(failure.errorMessage)),
       (category) => emit(FetchCategoryLoadSuccess(category)),
