@@ -24,11 +24,29 @@ import 'unit_test/fetch_category_test.mocks.dart';
 
 void main() {
   final mockDio = MockDio();
+  final requestOptions = RequestOptions(path: 'test');
+  final mockCategoryResponse = {
+    'trivia_categories': [
+      {'id': 1, 'name': 'Science'},
+    ]
+  };
+  final mockQuestionResponse = {
+    'response_code': 0,
+    'results': [
+      {
+        'category': 'Science',
+        'type': 'multiple',
+        'difficulty': 'easy',
+        'question': 'What is the powerhouse of the cell?',
+        'correct_answer': 'Mitochondria',
+        'incorrect_answers': ['Nucleus', 'Ribosome', 'Endoplasmic Reticulum'],
+      },
+    ],
+  };
 
   setUpAll(() async {
     sl.registerSingleton<Dio>(mockDio);
     initAppInjections();
-
 
     when(
       mockDio.get(
@@ -37,16 +55,28 @@ void main() {
       ),
     ).thenAnswer((_) async {
       return Response(
-        data: {
-          'trivia_categories': [
-            {'id': 1, 'name': 'General Knowledge'},
-          ]
-        },
+        data: mockCategoryResponse,
         statusCode: 200,
         requestOptions: RequestOptions(path: getAllCategories),
       );
     });
+
+    when(
+      mockDio.get(
+        '$authBaseUrl/api.php',
+        options: anyNamed('options'),
+        queryParameters: anyNamed('queryParameters'),
+      ),
+    ).thenAnswer((_) async {
+      return Response(
+        data: mockQuestionResponse,
+        statusCode: 200,
+        requestOptions: RequestOptions(path: '$authBaseUrl/api.php'),
+      );
+    });
   });
+
+
   group('Preference Screen', () {
     testWidgets('Open app - Success Case', (WidgetTester tester) async {
       await tester.pumpWidget(
@@ -153,28 +183,31 @@ void main() {
 
     await tester.pumpAndSettle();
     
-    final categoryDropdownFinder = find.text('Any').at(1);
-    final difficultyDropdownFinder = find.text('Any').at(3);
-    final typeDropdownFinder = find.text('Any').at(5);
+    final categoryDropdownFinder = find.byType(DropdownMenu<Object>).at(0);
+    final difficultyDropdownFinder = find.byType(DropdownMenu<Object>).at(1);
+    final typeDropdownFinder = find.byType(DropdownMenu<Object>).at(2);
     final minusIconFinder = find.byIcon(Icons.remove);
     final plusIconFinder = find.byIcon(Icons.add);
     final startQuizFinder = find.text('Start Quiz');
 
     await tester.tap(categoryDropdownFinder);
-    await tester.pump();
-    await tester.tap(find.text('General Knowledge').at(0));
-    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Science').last);
+    await tester.pumpAndSettle();
     await tester.tap(difficultyDropdownFinder);
-    await tester.pump();
-    await tester.tap(find.text('Easy'));
-    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Easy').last);
+    await tester.pumpAndSettle();
     await tester.tap(typeDropdownFinder);
-    await tester.pump();
-    await tester.tap(find.text('Multiple Choice'));
-    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Multiple Choice').last);
+    await tester.pumpAndSettle();
     await tester.tap(plusIconFinder);
-    await tester.pump();
+    await tester.pumpAndSettle();
+    await tester.tap(startQuizFinder);
+    await tester.pumpAndSettle();
 
-    expect(find.text('11'), findsOneWidget);
+    expect(find.text('Science'), findsOneWidget);
+    expect(find.text('What is the powerhouse of the cell?'), findsOneWidget);
   });
 }
