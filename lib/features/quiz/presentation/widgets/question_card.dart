@@ -30,7 +30,7 @@ class QuestionCard extends StatelessWidget {
     return SingleChildScrollView(
       child: Card(
         margin: const EdgeInsets.all(10),
-        color: color ?? AppColors.white,
+        color: color,
         elevation: 5,
         shadowColor: shadowColor?.withOpacity(0.5),
         child: Container(

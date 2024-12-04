@@ -47,12 +47,15 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: const Key('appBar'),
         title: const Text('Quiz Preferences'),
       ),
       body: BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
+        key: const Key('fetchCategoryBloc'),
         builder: (context, state) {
           if (state is FetchCategoryLoadInProgress) {
             return Center(
+              key: const Key('loading'),
               child: Lottie.asset(
                 'assets/json/loading.json',
                 frameRate: FrameRate.max,
@@ -60,9 +63,14 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
               ),
             );
           } else if (state is FetchCategoryLoadSuccess) {
-            return ChoosePreferenceContainer(categoryItems: state.categories);
+            return ChoosePreferenceContainer(
+              key: const Key('success'),
+              categoryItems: state.categories,
+            );
           } else if (state is FetchCategoryLoadFailure) {
+            print('Error: ${state.message}');
             return Center(
+              key: const Key('error'),
               child: Text(state.message),
             );
           } else {

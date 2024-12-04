@@ -26,6 +26,7 @@ class QuizImplApi extends AbstractQuizApi {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);
       } else {
+        print('error: ${e.message}');
         throw ServerException(e.message.toString(), e.response?.statusCode);
       }
     } on ServerException {

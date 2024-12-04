@@ -109,7 +109,9 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
         children: [
           buildDropdownPreference(),
           const SizedBox(height: 20),
-          buildAmountPreference(),
+          buildAmountPreference(
+            key: const Key('amount'),
+          ),
           const SizedBox(height: 20),
           buildButton(),
         ],
@@ -121,6 +123,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
     return Column(
       children: [
         buildDropdownPreferenceItem(
+          key: const Key('category'),
           categories: widget.categoryItems,
           menuTitle: 'Choose Category',
           controller: categoryController,
@@ -128,6 +131,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
         const SizedBox(height: 20),
         //difficulty
         buildDropdownPreferenceItem(
+          key: const Key('difficulty'),
           difficulties: QuizDifficulty.values,
           menuTitle: 'Choose Difficulty',
           controller: difficultyController,
@@ -135,6 +139,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
         const SizedBox(height: 20),
         //type
         buildDropdownPreferenceItem(
+          key: const Key('type'),
           types: QuizType.values,
           menuTitle: 'Choose Type',
           controller: typeController,
@@ -144,6 +149,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
   }
 
   Widget buildDropdownPreferenceItem({
+    Key? key,
     List<CategoryEntity>? categories,
     List<QuizDifficulty>? difficulties,
     List<QuizType>? types,
@@ -158,6 +164,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
                 .copyWith(fontWeight: FontWeight.w500)),
         const SizedBox(height: 5),
         DropdownMenu(
+          key: key,
           selectedTrailingIcon: const Icon(Icons.arrow_drop_up),
           width: size.width * 0.8,
           menuHeight: size.height * 0.5,
@@ -199,7 +206,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
     );
   }
 
-  Widget buildAmountPreference() {
+  Widget buildAmountPreference({Key? key}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -228,6 +235,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
         ),
         const SizedBox(width: 10),
         DropdownMenu(
+          key: key,
           width: 90,
           trailingIcon: null,
           leadingIcon: null,
