@@ -158,6 +158,34 @@ void main() {
   });
 
   testWidgets('Start Quiz - Success Case', (WidgetTester tester) async {
+
+    when(
+      mockDio.get(
+        getAllCategories,
+        options: anyNamed('options'),
+      ),
+    ).thenAnswer((_) async {
+      return Response(
+        data: mockCategoryResponse,
+        statusCode: 200,
+        requestOptions: RequestOptions(path: getAllCategories),
+      );
+    });
+
+    when(
+      mockDio.get(
+        '$authBaseUrl/api.php',
+        options: anyNamed('options'),
+        queryParameters: anyNamed('queryParameters'),
+      ),
+    ).thenAnswer((_) async {
+      return Response(
+        data: mockQuestionResponse,
+        statusCode: 200,
+        requestOptions: RequestOptions(path: '$authBaseUrl/api.php'),
+      );
+    });
+
     await tester.pumpWidget(
       ScreenUtilInit(
         // designSize: Size(400, 600),
