@@ -5,8 +5,7 @@ Future<void> iTapText(
   WidgetTester tester,
   String text,
 ) async {
-  final finder = find.text(text);
-  await tester.ensureVisible(finder);
-  await tester.tap(finder);
+  await Future.delayed(Duration(seconds: 1));
+  await tester.tap(find.text(text));
   await tester.pumpAndSettle();
 }

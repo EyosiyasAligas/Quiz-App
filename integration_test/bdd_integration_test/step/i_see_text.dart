@@ -5,6 +5,6 @@ Future<void> iSeeText(
   WidgetTester tester,
   String text,
 ) async {
+  await Future.delayed(Duration(seconds: 1));
   expect(find.text(text), findsOneWidget);
-  Future.delayed(const Duration(microseconds: 200));
 }

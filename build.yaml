@@ -10,4 +10,4 @@ targets:
         options:
           addHooks: true
 #          hookFolderName: /test/acceptance_test/hook/
-          stepFolderName: acceptance_test/step
+#          stepFolderName: acceptance_test/step

@@ -6,5 +6,6 @@ Future<void> iSeeExactlyWidgets(
   int count,
   Type type,
 ) async {
+  await Future.delayed(Duration(seconds: 2));
   expect(find.byType(type, skipOffstage: false), findsNWidgets(count));
 }

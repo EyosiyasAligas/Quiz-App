@@ -140,6 +140,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       itemCount: widget.questions.length,
                       itemBuilder: (context, index) {
                         return QuestionCard(
+                          key: Key('question ${index + 1}'),
                           index: index,
                           totalQuestions: widget.questions.length,
                           question: widget.questions[index],
