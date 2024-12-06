@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quiz_app/core/network/errors/exceptions.dart';
@@ -26,7 +28,7 @@ class QuizImplApi extends AbstractQuizApi {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);
       } else {
-        print('error: ${e.message}');
+        print('error l: ${e.message}, ${e}');
         throw ServerException(e.message.toString(), e.response?.statusCode);
       }
     } on ServerException {
@@ -44,7 +46,7 @@ class QuizImplApi extends AbstractQuizApi {
         queryParameters: params.toQueryParameters(),
         options: Options(responseType: ResponseType.json),
       );
-      if(result.data['response_code'] == 1) {
+      if (result.data['response_code'] == 1) {
         throw ServerException('No questions found', 404);
       }
       debugPrint('fetchedQuestions: ${result.data}');

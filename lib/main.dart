@@ -12,7 +12,7 @@ import 'features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart'
 import 'shared/service_locator.dart';
 
 Future<void> main() async {
-  // await initAppInjections();
+  await initAppInjections();
 
   await Hive.initFlutter();
   await Hive.openBox(settingsKey);

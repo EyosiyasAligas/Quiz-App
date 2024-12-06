@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
 
+import '../../../../shared/presentation/widgets/error_container.dart';
 import '../../../../shared/service_locator.dart';
 import '../bloc/choose_preference/choose_preference_cubit.dart';
 import '../bloc/fetch_category/fetch_category_bloc.dart';
@@ -69,9 +70,13 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
             );
           } else if (state is FetchCategoryLoadFailure) {
             print('Error: ${state.message}');
-            return Center(
+            return ErrorContainer(
               key: const Key('error'),
-              child: Text(state.message),
+              errorMessageText: state.message,
+              showRetryButton: true,
+              onTapRetry: () {
+                context.read<FetchCategoryBloc>().add(const FetchCategory());
+              },
             );
           } else {
             return const SizedBox();

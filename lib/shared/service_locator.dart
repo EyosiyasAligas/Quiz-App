@@ -17,7 +17,7 @@ final sl = GetIt.I;
 
 Future<void> initAppInjections() async {
   // External
-  // sl.registerSingleton<Dio>(Dio());
+  sl.registerSingleton<Dio>(Dio());
 
   // Data Sources
   sl.registerSingleton<QuizImplApi>(QuizImplApi(sl<Dio>()));
