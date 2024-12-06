@@ -121,71 +121,64 @@ class _QuizScreenState extends State<QuizScreen> {
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Container(
-              height: size.height - AppBar().preferredSize.height,
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              constraints: BoxConstraints(
-                minHeight: size.height - AppBar().preferredSize.height,
-                maxHeight: double.infinity,
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: PageView.builder(
-                      scrollBehavior: const MaterialScrollBehavior(),
-                      controller: _pageController,
-                      itemCount: widget.questions.length,
-                      itemBuilder: (context, index) {
-                        return QuestionCard(
-                          key: Key('question ${index + 1}'),
-                          index: index,
-                          totalQuestions: widget.questions.length,
-                          question: widget.questions[index],
-                          shadowColor: themeData.colorScheme.secondary,
-                          onOptionSelected: _onOptionSelected,
-                        );
-                      },
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                    ),
+          return Container(
+            // height: size.height - AppBar().preferredSize.height,
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    scrollBehavior: const MaterialScrollBehavior(),
+                    controller: _pageController,
+                    itemCount: widget.questions.length,
+                    itemBuilder: (context, index) {
+                      return QuestionCard(
+                        key: Key('question ${index + 1}'),
+                        index: index,
+                        totalQuestions: widget.questions.length,
+                        question: widget.questions[index],
+                        shadowColor: themeData.colorScheme.secondary,
+                        onOptionSelected: _onOptionSelected,
+                      );
+                    },
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    },
                   ),
-                  Expanded(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton.icon(
-                          onPressed: _previousQuestion,
-                          label: Text('Previous'),
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            size: 20,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        TextButton.icon(
-                          onPressed: () {
-                            _validateAnswer();
-                            _nextQuestion();
-                          },
-                          iconAlignment: IconAlignment.end,
-                          label: Text(_currentIndex == widget.questions.length - 1 ? 'Finish' : 'Next'),
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                          ),
-                        ),
-                      ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (_currentIndex != 0)
+                    TextButton.icon(
+                      onPressed: _previousQuestion,
+                      label: Text('Previous'),
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 10),
+                    TextButton.icon(
+                      onPressed: () {
+                        _validateAnswer();
+                        _nextQuestion();
+                      },
+                      iconAlignment: IconAlignment.end,
+                      label: Text(_currentIndex == widget.questions.length - 1 ? 'Finish' : 'Next'),
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         },

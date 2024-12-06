@@ -41,15 +41,13 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
   void increaseOrDecrease(int amount, bool isIncrement) {
     // not working
     timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      setState(() {
-        if (isIncrement && params.amount! < 50) {
-          params = params.copyWith(amount: params.amount! + 1);
-          amountController.text = params.amount.toString();
-        } else if (!isIncrement && params.amount! > 1) {
-          params = params.copyWith(amount: params.amount! - 1);
-          amountController.text = params.amount.toString();
-        }
-      });
+      if (isIncrement && params.amount! < 50) {
+        params = params.copyWith(amount: params.amount! + 1);
+        amountController.text = params.amount.toString();
+      } else if (!isIncrement && params.amount! > 1) {
+        params = params.copyWith(amount: params.amount! - 1);
+        amountController.text = params.amount.toString();
+      }
     });
   }
 
@@ -212,12 +210,10 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
       children: [
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (params.amount! > 1) {
-                params = params.copyWith(amount: params.amount! - 1);
-                amountController.text = params.amount.toString();
-              }
-            });
+            if (params.amount! > 1) {
+              params = params.copyWith(amount: params.amount! - 1);
+              amountController.text = params.amount.toString();
+            }
           },
           onLongPress: () {
             increaseOrDecrease(params.amount!, false);
@@ -263,12 +259,10 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            setState(() {
-              if (params.amount! < 50) {
-                params = params.copyWith(amount: params.amount! + 1);
-                amountController.text = params.amount.toString();
-              }
-            });
+            if (params.amount! < 50) {
+              params = params.copyWith(amount: params.amount! + 1);
+              amountController.text = params.amount.toString();
+            }
           },
           onLongPress: () {
             increaseOrDecrease(params.amount!, true);

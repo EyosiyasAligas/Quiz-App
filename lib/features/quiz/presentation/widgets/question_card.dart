@@ -31,10 +31,11 @@ class QuestionCard extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(10),
         color: color,
-        elevation: 5,
-        shadowColor: shadowColor?.withOpacity(0.5),
+        elevation: 10,
+        borderOnForeground: true,
+        shadowColor: shadowColor,
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           alignment: Alignment.center,
           child: Column(
             children: [
