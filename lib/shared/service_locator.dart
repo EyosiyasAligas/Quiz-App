@@ -1,8 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:quiz_app/features/quiz/data/repositories/ticker_repository_impl.dart';
+import 'package:quiz_app/features/quiz/domain/repositories/abstract_ticker_repository.dart';
+import 'package:quiz_app/features/quiz/domain/usecases/ticker_usecase.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/submit_quiz/submit_quiz_bloc.dart';
 
+import '../features/quiz/presentation/bloc/timer/timer_bloc.dart';
 import 'presentation/bloc/theme_mode/theme_mode_cubit.dart';
 import '../features/quiz/data/data_sources/remote/quiz_impl_api.dart';
 import '../features/quiz/data/repositories/quiz_repository_impl.dart';
@@ -25,10 +29,13 @@ Future<void> initAppInjections() async {
   // Repository
   sl.registerSingleton<QuizRepositoryImplementation>(QuizRepositoryImplementation(sl<QuizImplApi>()));
   sl.registerSingleton<AbstractQuizRepository>(sl<QuizRepositoryImplementation>());
+  sl.registerSingleton<TickerRepositoryImplementation>(TickerRepositoryImplementation());
+  sl.registerSingleton<AbstractTickerRepository>(sl<TickerRepositoryImplementation>());
 
   // UseCase
   sl.registerSingleton<FetchCategoryUseCase>(FetchCategoryUseCase(sl<AbstractQuizRepository>()));
   sl.registerSingleton<FetchQuizUseCase>(FetchQuizUseCase(sl<AbstractQuizRepository>()));
+  sl.registerSingleton<TickerUseCase>(TickerUseCase(sl<AbstractTickerRepository>()));
 
   // Bloc
   sl.registerFactory<ThemeModeCubit>(() => ThemeModeCubit(ThemeMode.system));
@@ -36,4 +43,5 @@ Future<void> initAppInjections() async {
   sl.registerFactory<FetchQuestionBloc>(() => FetchQuestionBloc(sl<FetchQuizUseCase>()));
   sl.registerFactory<FetchCategoryBloc>(() => FetchCategoryBloc(sl<FetchCategoryUseCase>()));
   sl.registerFactory<SubmitQuizBloc>(() => SubmitQuizBloc());
+  sl.registerFactory<TimerBloc>(() => TimerBloc(sl<TickerUseCase>()));
 }

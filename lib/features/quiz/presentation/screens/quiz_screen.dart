@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:quiz_app/features/quiz/presentation/bloc/timer/timer_bloc.dart';
 
 import '../../../../core/route/router.dart';
 import '../../../../shared/service_locator.dart';
@@ -19,16 +21,16 @@ class QuizScreen extends StatefulWidget {
   static Route route(RouteSettings routeSettings) {
     final args = routeSettings.arguments as Map<String, dynamic>;
     return MaterialPageRoute(
-      builder: (_) =>
-          MultiBlocProvider(
-              providers: [
-                BlocProvider(create: (context) => sl.get<FetchQuestionBloc>()),
-                BlocProvider(create: (context) => sl.get<SubmitQuizBloc>()),
-              ],
-              child: QuizScreen(
-                questions: args['questions'],
-                category: args['category'],
-              )),
+      builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => sl.get<FetchQuestionBloc>()),
+            BlocProvider(create: (context) => sl.get<SubmitQuizBloc>()),
+            BlocProvider(create: (context) => sl.get<TimerBloc>()),
+          ],
+          child: QuizScreen(
+            questions: args['questions'],
+            category: args['category'],
+          )),
     );
   }
 
@@ -42,11 +44,14 @@ class _QuizScreenState extends State<QuizScreen> {
   late Size size;
   late ThemeData themeData;
   int score = 0;
+  late int totalDuration;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    totalDuration = widget.questions.length * 10;
+    context.read<TimerBloc>().add(TimerStarted(duration: totalDuration));
   }
 
   @override
@@ -128,6 +133,7 @@ class _QuizScreenState extends State<QuizScreen> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                buildTimer(),
                 Expanded(
                   child: PageView.builder(
                     scrollBehavior: const MaterialScrollBehavior(),
@@ -155,14 +161,14 @@ class _QuizScreenState extends State<QuizScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (_currentIndex != 0)
-                    TextButton.icon(
-                      onPressed: _previousQuestion,
-                      label: Text('Previous'),
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
+                      TextButton.icon(
+                        onPressed: _previousQuestion,
+                        label: Text('Previous'),
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          size: 20,
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 10),
                     TextButton.icon(
                       onPressed: () {
@@ -170,7 +176,9 @@ class _QuizScreenState extends State<QuizScreen> {
                         _nextQuestion();
                       },
                       iconAlignment: IconAlignment.end,
-                      label: Text(_currentIndex == widget.questions.length - 1 ? 'Finish' : 'Next'),
+                      label: Text(_currentIndex == widget.questions.length - 1
+                          ? 'Finish'
+                          : 'Next'),
                       icon: Icon(
                         Icons.arrow_forward_ios,
                         size: 20,
@@ -183,6 +191,49 @@ class _QuizScreenState extends State<QuizScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget buildTimer() {
+    return BlocConsumer<TimerBloc, TimerState>(
+      listener: (context, state) {
+        if (state is TimerRunComplete) {
+          context.read<SubmitQuizBloc>().add(SubmitQuiz(score));
+
+        }
+      },
+      builder: (context, state) {
+        final duration = state.duration;
+        final minutesStr =
+            ((duration / 60) % 60).floor().toString().padLeft(2, '0');
+        final secondsStr = (duration % 60).floor().toString().padLeft(2, '0');
+        final progress = duration / totalDuration;
+
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  // width: size.width - 100,
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey[300],
+                    color: (progress <= 0.2)
+                        ? AppColors.errorColor
+                        : themeData.colorScheme.secondary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              Text(
+                '$minutesStr:$secondsStr',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
