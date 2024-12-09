@@ -4,10 +4,13 @@ import 'package:quiz_app/core/theme/app_colors.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/timer/timer_bloc.dart';
 
 import '../../../../core/route/router.dart';
+import '../../../../core/utils/helper.dart';
 import '../../../../shared/service_locator.dart';
 import '../../domain/entities/question_entity.dart';
+import '../bloc/answer_question/answer_question_bloc.dart';
 import '../bloc/fetch_question/fetch_question_bloc.dart';
-import '../bloc/submit_quiz/submit_quiz_bloc.dart';
+
+// import '../bloc/submit_quiz/submit_quiz_bloc.dart';
 import '../widgets/question_card.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -24,8 +27,8 @@ class QuizScreen extends StatefulWidget {
       builder: (_) => MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => sl.get<FetchQuestionBloc>()),
-            BlocProvider(create: (context) => sl.get<SubmitQuizBloc>()),
             BlocProvider(create: (context) => sl.get<TimerBloc>()),
+            BlocProvider(create: (context) => sl.get<AnswerQuestionBloc>()),
           ],
           child: QuizScreen(
             questions: args['questions'],
@@ -43,7 +46,6 @@ class _QuizScreenState extends State<QuizScreen> {
   int _currentIndex = 0;
   late Size size;
   late ThemeData themeData;
-  int score = 0;
   late int totalDuration;
 
   @override
@@ -69,7 +71,8 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _nextQuestion() {
-    if (_currentIndex < widget.questions.length - 1) {
+    if (_currentIndex < widget.questions.length - 1 /*&&
+        widget.questions[_currentIndex].selectedAnswer!.isNotEmpty*/) {
       setState(() {
         _currentIndex++;
         _pageController.nextPage(
@@ -92,20 +95,37 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  void _onSkipQuestion() {
+    if (_currentIndex < widget.questions.length - 1) {
+      setState(() {
+        _currentIndex++;
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      });
+    }
+  }
+
   void _onOptionSelected(String selectedOption) {
-    setState(() {
-      widget.questions[_currentIndex].selectedAnswer = selectedOption;
-    });
+    context.read<AnswerQuestionBloc>().add(
+          AnswerQuestion(
+            questionIndex: _currentIndex,
+            selectedAnswer: selectedOption,
+            questions: widget.questions,
+          ),
+        );
   }
 
   void _validateAnswer() {
-    final currentQuestion = widget.questions[_currentIndex];
-    if (currentQuestion.selectedAnswer == currentQuestion.correctAnswer) {
-      score++;
-    }
-    print('score: $score');
     if (_currentIndex == widget.questions.length - 1) {
-      context.read<SubmitQuizBloc>().add(SubmitQuiz(score));
+      var score = context.read<AnswerQuestionBloc>().score;
+      context.read<AnswerQuestionBloc>().add(
+            CompleteQuiz(
+              questions: widget.questions,
+              score: score,
+            ),
+          );
     }
   }
 
@@ -116,80 +136,77 @@ class _QuizScreenState extends State<QuizScreen> {
         key: const Key('quiz_screen_app_bar'),
         title: Text(widget.category),
       ),
-      body: BlocConsumer<SubmitQuizBloc, SubmitQuizState>(
+      body: BlocListener<AnswerQuestionBloc, AnswerQuestionState>(
         listener: (context, state) {
-          if (state is SubmitQuizSuccess) {
+          if (state is AnswerQuestionComplete) {
             Navigator.of(context).pushReplacementNamed(
               Routes.resultScreen,
-              arguments: score,
+              arguments: {
+                'score': state.score,
+                'questions': state.questions,
+              },
             );
           }
         },
-        builder: (context, state) {
-          return Container(
-            // height: size.height - AppBar().preferredSize.height,
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                buildTimer(),
-                Expanded(
-                  child: PageView.builder(
-                    scrollBehavior: const MaterialScrollBehavior(),
-                    controller: _pageController,
-                    itemCount: widget.questions.length,
-                    itemBuilder: (context, index) {
-                      return QuestionCard(
-                        key: Key('question ${index + 1}'),
-                        index: index,
-                        totalQuestions: widget.questions.length,
-                        question: widget.questions[index],
-                        shadowColor: themeData.colorScheme.secondary,
-                        onOptionSelected: _onOptionSelected,
-                      );
-                    },
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    },
-                  ),
+        child: Container(
+          // height: size.height - AppBar().preferredSize.height,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buildTimer(),
+              Flexible(
+                child: PageView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  itemCount: widget.questions.length,
+                  itemBuilder: (context, index) {
+                    return QuestionCard(
+                      key: Key('question ${index + 1}'),
+                      index: index,
+                      totalQuestions: widget.questions.length,
+                      question: widget.questions[index],
+                      shadowColor: themeData.colorScheme.secondary,
+                      onOptionSelected: _onOptionSelected,
+                      onSkipPressed: _onSkipQuestion,
+                    );
+                  },
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (_currentIndex != 0)
-                      TextButton.icon(
-                        onPressed: _previousQuestion,
-                        label: Text('Previous'),
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                        ),
-                      ),
-                    const SizedBox(width: 10),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (_currentIndex != 0)
                     TextButton.icon(
-                      onPressed: () {
-                        _validateAnswer();
-                        _nextQuestion();
-                      },
-                      iconAlignment: IconAlignment.end,
-                      label: Text(_currentIndex == widget.questions.length - 1
-                          ? 'Finish'
-                          : 'Next'),
+                      onPressed: _previousQuestion,
+                      label: Text('Previous'),
                       icon: Icon(
-                        Icons.arrow_forward_ios,
+                        Icons.arrow_back_ios,
                         size: 20,
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                  const SizedBox(width: 10),
+                  TextButton.icon(
+                    onPressed: () {
+                      _validateAnswer();
+                      _nextQuestion();
+                    },
+                    iconAlignment: IconAlignment.end,
+                    label: Text(_currentIndex == widget.questions.length - 1
+                        ? 'Finish'
+                        : 'Next'),
+                    icon: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -198,8 +215,13 @@ class _QuizScreenState extends State<QuizScreen> {
     return BlocConsumer<TimerBloc, TimerState>(
       listener: (context, state) {
         if (state is TimerRunComplete) {
-          context.read<SubmitQuizBloc>().add(SubmitQuiz(score));
-
+          var score = context.read<AnswerQuestionBloc>().score;
+          context.read<AnswerQuestionBloc>().add(
+                CompleteQuiz(
+                  questions: widget.questions,
+                  score: score,
+                ),
+              );
         }
       },
       builder: (context, state) {

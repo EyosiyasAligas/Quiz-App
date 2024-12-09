@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quiz_app/core/network/errors/exceptions.dart';
@@ -28,8 +26,7 @@ class QuizImplApi extends AbstractQuizApi {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);
       } else {
-        print('error l: ${e.message}, ${e}');
-        throw ServerException(e.message.toString(), e.response?.statusCode);
+        throw ServerException(e.error.toString(), e.response?.statusCode);
       }
     } on ServerException {
       rethrow;
@@ -58,7 +55,7 @@ class QuizImplApi extends AbstractQuizApi {
         throw CancelTokenException(
             e.message.toString(), e.response?.statusCode);
       } else {
-        throw ServerException(e.message.toString(), e.response?.statusCode);
+        throw ServerException(e.error.toString(), e.response?.statusCode);
       }
     } on ServerException {
       rethrow;

@@ -8,7 +8,6 @@ import '../../../../shared/service_locator.dart';
 import '../bloc/choose_preference/choose_preference_cubit.dart';
 import '../bloc/fetch_category/fetch_category_bloc.dart';
 import '../widgets/choose_preference_container.dart';
-import '../widgets/custom_navigation_bar.dart';
 
 class PreferenceScreen extends StatefulWidget {
   const PreferenceScreen({super.key});
@@ -70,13 +69,16 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
             );
           } else if (state is FetchCategoryLoadFailure) {
             print('Error: ${state.message}');
-            return ErrorContainer(
-              key: const Key('error'),
-              errorMessageText: state.message,
-              showRetryButton: true,
-              onTapRetry: () {
-                context.read<FetchCategoryBloc>().add(const FetchCategory());
-              },
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ErrorContainer(
+                key: const Key('error'),
+                errorMessageText: state.message,
+                showRetryButton: true,
+                onTapRetry: () {
+                  context.read<FetchCategoryBloc>().add(const FetchCategory());
+                },
+              ),
             );
           } else {
             return const SizedBox();

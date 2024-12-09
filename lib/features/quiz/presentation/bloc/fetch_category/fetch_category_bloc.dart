@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:quiz_app/core/utils/usecase.dart';
 import 'package:quiz_app/features/quiz/domain/entities/category_entity.dart';
-import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
 import '../../../domain/usecases/fetch_category_usecase.dart';
 

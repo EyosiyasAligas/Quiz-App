@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
 import '../../../../core/network/errors/failures.dart';
 import '../../../../core/utils/usecase.dart';

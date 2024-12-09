@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:quiz_app/features/quiz/data/repositories/ticker_repository_impl.dart';
 import 'package:quiz_app/features/quiz/domain/repositories/abstract_ticker_repository.dart';
 import 'package:quiz_app/features/quiz/domain/usecases/ticker_usecase.dart';
+import 'package:quiz_app/features/quiz/presentation/bloc/answer_question/answer_question_bloc.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/submit_quiz/submit_quiz_bloc.dart';
 
 import '../features/quiz/presentation/bloc/timer/timer_bloc.dart';
@@ -44,4 +45,5 @@ Future<void> initAppInjections() async {
   sl.registerFactory<FetchCategoryBloc>(() => FetchCategoryBloc(sl<FetchCategoryUseCase>()));
   sl.registerFactory<SubmitQuizBloc>(() => SubmitQuizBloc());
   sl.registerFactory<TimerBloc>(() => TimerBloc(sl<TickerUseCase>()));
+  sl.registerFactory<AnswerQuestionBloc>(() => AnswerQuestionBloc());
 }

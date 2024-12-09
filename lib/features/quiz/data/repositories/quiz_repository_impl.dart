@@ -2,8 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:quiz_app/core/network/errors/failures.dart';
 import 'package:quiz_app/features/quiz/data/models/question_model.dart';
 import 'package:quiz_app/features/quiz/data/models/quiz_params_model.dart';
-import 'package:quiz_app/features/quiz/domain/entities/category_entity.dart';
-import 'package:quiz_app/features/quiz/domain/entities/question_entity.dart';
 import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
 import '../../../../core/network/errors/exceptions.dart';

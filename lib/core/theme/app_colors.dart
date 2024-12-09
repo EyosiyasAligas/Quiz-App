@@ -6,7 +6,7 @@ class AppColors {
 
   //what can i call this color 0xFF1A1A1A
   static const dark = Color(0xFF1A1A1A);
-  static const primary = Color(0xFFE400A3);
+  static const primary = Color(0xFFB119FB);
   static const secondary = Color(0xFF4993FF);
   static const lightGray = Color(0xFFdddddd);
   static const darkGray = Color(0xFF808080);
