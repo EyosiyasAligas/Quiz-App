@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:quiz_app/features/quiz/data/repositories/ticker_repository_impl.dart';
-import 'package:quiz_app/features/quiz/domain/repositories/abstract_ticker_repository.dart';
-import 'package:quiz_app/features/quiz/domain/usecases/ticker_usecase.dart';
-import 'package:quiz_app/features/quiz/presentation/bloc/answer_question/answer_question_bloc.dart';
-import 'package:quiz_app/features/quiz/presentation/bloc/submit_quiz/submit_quiz_bloc.dart';
 
+import '../features/quiz/data/data_sources/local/quiz_local_impl.dart';
+import '../features/quiz/data/repositories/ticker_repository_impl.dart';
+import '../features/quiz/domain/repositories/abstract_ticker_repository.dart';
+import '../features/quiz/domain/usecases/ticker_usecase.dart';
+import '../features/quiz/presentation/bloc/answer_question/answer_question_bloc.dart';
+import '../features/quiz/presentation/bloc/submit_quiz/submit_quiz_bloc.dart';
 import '../features/quiz/presentation/bloc/timer/timer_bloc.dart';
 import 'presentation/bloc/theme_mode/theme_mode_cubit.dart';
 import '../features/quiz/data/data_sources/remote/quiz_impl_api.dart';
@@ -26,9 +27,10 @@ Future<void> initAppInjections() async {
 
   // Data Sources
   sl.registerSingleton<QuizImplApi>(QuizImplApi(sl<Dio>()));
+  sl.registerSingleton<QuizLocalImplementation>(QuizLocalImplementation());
 
   // Repository
-  sl.registerSingleton<QuizRepositoryImplementation>(QuizRepositoryImplementation(sl<QuizImplApi>()));
+  sl.registerSingleton<QuizRepositoryImplementation>(QuizRepositoryImplementation(sl<QuizImplApi>(), sl<QuizLocalImplementation>()));
   sl.registerSingleton<AbstractQuizRepository>(sl<QuizRepositoryImplementation>());
   sl.registerSingleton<TickerRepositoryImplementation>(TickerRepositoryImplementation());
   sl.registerSingleton<AbstractTickerRepository>(sl<TickerRepositoryImplementation>());

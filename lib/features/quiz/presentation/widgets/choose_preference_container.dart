@@ -101,7 +101,7 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
   Widget buildBody() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

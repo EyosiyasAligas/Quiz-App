@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:quiz_app/features/quiz/data/models/category_model.dart';
 
 import 'core/route/router.dart';
 import 'core/theme/app_theme.dart';
@@ -12,11 +13,13 @@ import 'features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart'
 import 'shared/service_locator.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initAppInjections();
 
   await Hive.initFlutter();
-  await Hive.openBox(settingsKey);
-  await Hive.openBox(themeModeKey);
+  await Hive.openBox(settingsBoxKey);
+  await Hive.openBox(categoryBoxKey);
+  await Hive.openBox(categoriesKey);
 
   runApp(
     const QuizApp(),

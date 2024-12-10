@@ -1,11 +1,67 @@
-import 'package:flutter/material.dart';
-import 'package:quiz_app/core/theme/app_colors.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart' as dio;
+
+import '../theme/app_colors.dart';
 import 'ui_constants.dart';
 
-ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
-
 class Helper {
+  static Future<bool> isConnected() async {
+    final connectivity = Connectivity();
+    final result = await connectivity.checkConnectivity();
+    if (result.contains(ConnectivityResult.none)) {
+      return false;
+    } else {
+      try {
+        print('Checking internet connection');
+        final result = dio.Dio(dio.BaseOptions(
+          connectTimeout: const Duration(seconds: 5),
+          receiveTimeout: const Duration(seconds: 5),
+          sendTimeout: const Duration(seconds: 5),
+        ));
+
+        final response = await result.getUri(Uri.parse('https://www.google.com'));
+        print('Internet works: ${response.statusCode}');
+        return response.statusCode == 200;
+      } catch (e) {
+        return false;
+      }
+    }
+  }
+
+  static Stream<bool> checkInternetConnectivity() async* {
+    final connectivity = Connectivity();
+
+    // Listen to connectivity changes
+    await for (var connectivityResult in connectivity.onConnectivityChanged) {
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        print('No internet connection');
+        yield false;
+      } else {
+        try {
+          try {
+            // add timeout to the request
+            final result = dio.Dio(dio.BaseOptions(
+              connectTimeout: const Duration(seconds: 5),
+              receiveTimeout: const Duration(seconds: 5),
+              sendTimeout: const Duration(seconds: 5),
+            ));
+
+            final response = await result.getUri(Uri.parse('https://www.google.com'));
+            yield true; // Internet works
+          } catch (e) {
+            yield false; // No internet
+          }
+        } on SocketException catch (_) {
+          print('No internet connection');
+          yield false;
+        }
+      }
+    }
+  }
+
   static Future<dynamic> showBottomSheet({
     required Widget child,
     required BuildContext context,
@@ -96,8 +152,9 @@ class Helper {
       margin: EdgeInsets.symmetric(
           horizontal: 20, vertical: MediaQuery.sizeOf(context).height * 0.05),
       dismissDirection: DismissDirection.horizontal,
-      backgroundColor: color ?? (isError ? AppColors.errorColor : AppColors.successColor),
-      showCloseIcon: label != null ? false : true,
+      backgroundColor:
+          color ?? (isError ? AppColors.errorColor : AppColors.successColor),
+      showCloseIcon: label != null && onPressed != null ? true : false,
       action: label != null && onPressed != null
           ? SnackBarAction(
               label: label,

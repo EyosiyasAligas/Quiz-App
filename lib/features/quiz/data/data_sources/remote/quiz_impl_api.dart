@@ -17,7 +17,14 @@ class QuizImplApi extends AbstractQuizApi {
   @override
   Future<List<CategoryModel>> fetchCategory() async {
     try {
-      final result = await dio.get(getAllCategories);
+      final result = await dio.get(
+        getAllCategories,
+        options: Options(
+          // receiveTimeout: Duration(seconds: 5),
+          // sendTimeout: Duration(seconds: 5),
+        ),
+      );
+      print('fetchCategory: ${result.data}');
       return List<Map<String, dynamic>>.from(result.data['trivia_categories'])
           .map((e) => CategoryModel.fromJson(e))
           .toList();
@@ -41,7 +48,11 @@ class QuizImplApi extends AbstractQuizApi {
       final result = await dio.get(
         '$authBaseUrl/api.php',
         queryParameters: params.toQueryParameters(),
-        options: Options(responseType: ResponseType.json),
+        options: Options(
+          responseType: ResponseType.json,
+          // receiveTimeout: Duration(seconds: 5),
+          // sendTimeout: Duration(seconds: 5),
+        ),
       );
       if (result.data['response_code'] == 1) {
         throw ServerException('No questions found', 404);

@@ -1,3 +1,7 @@
 //Settings box keys
-const String settingsKey = "settings";
+const String settingsBoxKey = "settingsBox";
 const String themeModeKey = "themeMode";
+
+//Quiz box keys
+const String categoryBoxKey = "categoriesBox";
+const String categoriesKey = "categories";

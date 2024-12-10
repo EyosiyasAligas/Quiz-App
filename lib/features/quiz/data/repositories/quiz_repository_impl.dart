@@ -1,23 +1,36 @@
 import 'package:dartz/dartz.dart';
-import 'package:quiz_app/core/network/errors/failures.dart';
-import 'package:quiz_app/features/quiz/data/models/question_model.dart';
-import 'package:quiz_app/features/quiz/data/models/quiz_params_model.dart';
-import 'package:quiz_app/features/quiz/domain/entities/quiz_params.dart';
 
 import '../../../../core/network/errors/exceptions.dart';
+import '../../../../core/network/errors/failures.dart';
+import '../../../../core/utils/helper.dart';
+import '../../../../core/utils/network_constants.dart';
+import '../../domain/entities/quiz_params.dart';
 import '../../domain/repositories/abstract_quiz_repository.dart';
+import '../data_sources/local/abstract_quiz_local.dart';
 import '../data_sources/remote/abstract_quiz_api.dart';
 import '../models/category_model.dart';
+import '../models/question_model.dart';
+import '../models/quiz_params_model.dart';
 
-class QuizRepositoryImplementation extends AbstractQuizRepository {
+class QuizRepositoryImplementation extends AbstractQuizRepository{
   final AbstractQuizApi api;
+  final AbstractQuizLocal local;
 
-  QuizRepositoryImplementation(this.api);
+  QuizRepositoryImplementation(this.api, this.local);
 
   @override
   Future<Either<Failure, List<CategoryModel>>> fetchCategories() async {
     try {
-      final result = await api.fetchCategory();
+      List<CategoryModel> result = [];
+      final bool isConnected = await Helper.isConnected();
+      print('isConnected: $isConnected');
+      if(isConnected) {
+        result = await api.fetchCategory();
+        print('result: $result');
+        await local.cacheCategories(result);
+      } else {
+        result = await local.getCachedCategories();
+      }
 
       return Right(result..insert(0,  CategoryModel(id: -1, name: 'Any')));
     } on ServerException catch (e) {

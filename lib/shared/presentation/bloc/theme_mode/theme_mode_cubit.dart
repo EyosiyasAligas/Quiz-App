@@ -7,8 +7,8 @@ import '../../../../core/utils/local_storage_constants.dart';
 class ThemeModeCubit extends Cubit<ThemeMode> {
   ThemeModeCubit(super.initialState);
 
-  void updateTheme(ThemeMode theme) {
-    var box = Hive.box(settingsKey);
+  Future<void> updateTheme(ThemeMode theme) async {
+    var box = Hive.box(settingsBoxKey);
     if (theme == ThemeMode.dark) {
       box.put(themeModeKey, 'dark');
     } else if (theme == ThemeMode.light) {
@@ -20,7 +20,7 @@ class ThemeModeCubit extends Cubit<ThemeMode> {
   }
 
   ThemeMode getTheme() {
-    var box = Hive.box(settingsKey);
+    var box = Hive.box(settingsBoxKey);
     String? themeMode = box.get(themeModeKey);
 
     if (themeMode == null) {
