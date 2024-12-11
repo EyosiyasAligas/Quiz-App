@@ -36,7 +36,7 @@ class ResultScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(
-              Routes.preferenceScreen,
+              Routes.home,
             );
           },
           child: const Icon(Icons.home_filled),

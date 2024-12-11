@@ -23,11 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(const Duration(seconds: 2)).then((value) {
-      if(mounted) {
+      if (mounted) {
         Navigator.pushReplacementNamed(
-        context,
-        Routes.preferenceScreen,
-      );
+          context,
+          Routes.home,
+        );
       }
     });
   }

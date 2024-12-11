@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:quiz_app/features/quiz/data/models/category_model.dart';
 
 import 'core/route/router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/local_storage_constants.dart';
+import 'features/quiz/presentation/bloc/choose_preference/choose_preference_cubit.dart';
+import 'features/quiz/presentation/bloc/fetch_category/fetch_category_bloc.dart';
 import 'shared/presentation/bloc/theme_mode/theme_mode_cubit.dart';
 import 'core/utils/ui_constants.dart';
 import 'features/quiz/presentation/bloc/fetch_question/fetch_question_bloc.dart';
@@ -33,10 +34,16 @@ class QuizApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<FetchCategoryBloc>(
+          create: (context) => sl<FetchCategoryBloc>()..add(const FetchCategory()),
+        ),
         BlocProvider<FetchQuestionBloc>(
           create: (context) => sl<FetchQuestionBloc>(),
         ),
         BlocProvider(create: (context) => sl<ThemeModeCubit>()),
+        BlocProvider(
+          create: (context) => sl<ChoosePreferenceCubit>(),
+        ),
       ],
       child: BlocBuilder<ThemeModeCubit, ThemeMode>(
         builder: (context, state) {

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../features/home/presentation/bloc/navigation/navigation_cubit.dart';
 import '../features/quiz/data/data_sources/local/quiz_local_impl.dart';
 import '../features/quiz/data/repositories/ticker_repository_impl.dart';
 import '../features/quiz/domain/repositories/abstract_ticker_repository.dart';
@@ -42,6 +43,7 @@ Future<void> initAppInjections() async {
 
   // Bloc
   sl.registerFactory<ThemeModeCubit>(() => ThemeModeCubit(ThemeMode.system));
+  sl.registerFactory<NavigationCubit>(() => NavigationCubit());
   sl.registerFactory<ChoosePreferenceCubit>(() => ChoosePreferenceCubit());
   sl.registerFactory<FetchQuestionBloc>(() => FetchQuestionBloc(sl<FetchQuizUseCase>()));
   sl.registerFactory<FetchCategoryBloc>(() => FetchCategoryBloc(sl<FetchCategoryUseCase>()));

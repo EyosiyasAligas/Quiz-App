@@ -14,7 +14,7 @@ class QuizLocalImplementation implements AbstractQuizLocal {
     try {
       final formattedData = categories.map((category) => category.toJson()).toList();
       final box = Hive.box(categoryBoxKey);
-      box.put(categoriesKey, formattedData);
+      await box.put(categoriesKey, formattedData);
     } catch (e) {
       throw e;
     }
@@ -24,7 +24,7 @@ class QuizLocalImplementation implements AbstractQuizLocal {
   Future<List<CategoryModel>> getCachedCategories() async {
     try {
       final box = Hive.box(categoryBoxKey);
-      final result = box.get(categoriesKey);
+      final result = await box.get(categoriesKey);
       if (result == null) {
         return [];
       }

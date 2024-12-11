@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/intro/presentation/splash_screen.dart';
 import '../../features/quiz/presentation/screens/preference_screen.dart';
 import '../../features/quiz/presentation/screens/quiz_screen.dart';
@@ -13,7 +14,6 @@ class Routes {
   static const String quizScreen = "/quizScreen";
   static const String resultScreen = "/resultScreen";
 
-
   static String currentRoute = splash;
 
   static Route<dynamic> onGenerateRouted(RouteSettings routeSettings) {
@@ -25,6 +25,10 @@ class Routes {
       case splash:
         {
           return SplashScreen.route(routeSettings);
+        }
+      case home:
+        {
+          return HomeScreen.route(routeSettings);
         }
       case preferenceScreen:
         {
