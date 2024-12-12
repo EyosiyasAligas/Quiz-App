@@ -183,7 +183,6 @@ class _QuizScreenState extends State<QuizScreen> {
                       index: index,
                       totalQuestions: widget.questions.length,
                       question: widget.questions[index],
-                      shadowColor: themeData.colorScheme.secondary,
                       onOptionSelected: _onOptionSelected,
                       onSkipPressed: _onSkipQuestion,
                     );

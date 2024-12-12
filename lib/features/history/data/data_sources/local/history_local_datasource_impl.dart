@@ -25,20 +25,19 @@ class HistoryLocalDatasourceImpl implements AbstractHistoryLocalDataSource {
   Future<List<HistoryModel>> fetchHistories() async {
     try {
       final box = Hive.box(historyBoxKey);
-      final List<dynamic> historyList = await box.get(historyKey);
-      print('historyList from fetch: $historyList');
+      final List<dynamic>? historyList = await box.get(historyKey);
+
+      if(historyList == null) {
+        return [];
+      }
       final List<HistoryModel> histories = historyList
           .map((e) => HistoryModel.fromJson(Map<String, dynamic>.from(e)))
           .toList();
 
-      print('histories: $histories');
-      return Future.value(histories);
+      return histories;
     } on CacheException catch (e) {
-      print('CacheException: ${e.message}');
       throw CacheException(e.message);
     } catch (e, stackTrace) {
-      print('Exception: $e');
-      print('stackTrace: $stackTrace');
       rethrow;
     }
   }

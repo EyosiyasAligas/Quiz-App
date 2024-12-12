@@ -15,4 +15,7 @@ class AppColors {
 
   static const successColor = Color(0xFF3A95D6);
   static const errorColor = Color(0xFFFF6262);
+
+  static Color lightCardColor = Colors.blueGrey.shade100;
+  static Color darkCardColor = Colors.blueGrey.shade700;
 }

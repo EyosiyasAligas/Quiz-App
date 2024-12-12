@@ -21,6 +21,7 @@ class QuestionModel extends QuestionEntity {
       correctAnswer: json['correct_answer'],
       incorrectAnswers: List<String>.from(json['incorrect_answers']),
       options: List<String>.from(json['incorrect_answers'])..add(json['correct_answer'])..shuffle(),
+      selectedAnswer: json['selected_answer'] ?? '',
     );
   }
 
@@ -32,6 +33,7 @@ class QuestionModel extends QuestionEntity {
       'question': super.question,
       'correct_answer': super.correctAnswer,
       'incorrect_answers': super.incorrectAnswers,
+      'selected_answer': super.selectedAnswer,
     };
   }
 }

@@ -12,7 +12,7 @@ ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
 /// Light theme
 final ThemeData appTheme = ThemeData(
   dialogBackgroundColor: AppColors.lightGray,
-  cardColor: AppColors.darkGray,
+  cardColor: AppColors.lightCardColor,
   dropdownMenuTheme: DropdownMenuThemeData(
     textStyle: AppTextStyle.mediumBlack,
     inputDecorationTheme: InputDecorationTheme(
@@ -94,7 +94,7 @@ final ThemeData appTheme = ThemeData(
 /// Dark theme
 final ThemeData darkAppTheme = ThemeData(
   dialogBackgroundColor: AppColors.dark,
-  cardColor: AppColors.lightGray,
+  cardColor: AppColors.darkCardColor,
   dropdownMenuTheme: DropdownMenuThemeData(
     textStyle: AppTextStyle.mediumWhite,
     inputDecorationTheme: InputDecorationTheme(

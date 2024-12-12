@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quiz_app/features/history/domain/entities/history_entity.dart';
 import 'package:quiz_app/features/quiz/domain/entities/quiz_enums.dart';
 import 'package:quiz_app/features/quiz/presentation/widgets/question_card.dart';
@@ -50,11 +51,14 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  bool canSeeReview = false;
+  late Size size;
+  late ThemeData themeData;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // print all values
     context.read<CacheHistoryBloc>().add(
           CacheHistory(
             HistoryEntity(
@@ -71,49 +75,113 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    size = MediaQuery.sizeOf(context);
+    themeData = Theme.of(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(
-              Routes.home,
-            );
-          },
-          child: const Icon(Icons.home_filled),
-        ),
         appBar: AppBar(
           title: const Text('Result'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(
+                Routes.home,
+              );
+            },
+          ),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Your Score: ${widget.score}/${widget.questions.length}',
-                    style: Theme.of(context).textTheme.headlineMedium,
+        body: SingleChildScrollView(
+          child: Container(
+            height: size.height * 0.9,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (!canSeeReview)
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20, top: 20),
+                    width: double.infinity,
+                    height: size.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: themeData.cardColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Your Score',
+                          style: themeData.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Container(
+                          height: size.height * 0.3,
+                          alignment: Alignment.topCenter,
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: SizedBox(
+                                  height: size.height * 0.2,
+                                  width: size.height * 0.2,
+                                  child: CircularProgressIndicator(
+                                    value: widget.score / widget.questions.length,
+                                    strokeWidth: 8,
+                                    backgroundColor: Colors.grey.shade300,
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  '${((widget.score / widget.questions.length) * 100).toStringAsFixed(2)}%',
+                                  textAlign: TextAlign.center,
+                                  style: themeData.textTheme.headlineSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Lottie.asset(
+                          'assets/json/trophy.json',
+                          height: size.height * 0.2,
+                        ),
+                        const Spacer(),
+                        CustomButton(
+                          onPressed: () {
+                            setState(() {
+                              canSeeReview = true;
+                            });
+                          },
+                          width: size.width * 0.7,
+                          text: 'Check Solutions',
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    final question = widget.questions[index];
-                    return QuestionCard(
-                      isReview: true,
-                      question: question,
-                      index: index,
-                      totalQuestions: widget.questions.length,
-                    );
-                  },
-                  itemCount: widget.questions.length,
-                ),
-              ),
-            ],
+                if (canSeeReview)
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final question = widget.questions[index];
+                        return QuestionCard(
+                          isReview: true,
+                          question: question,
+                          index: index,
+                          totalQuestions: widget.questions.length,
+                        );
+                      },
+                      itemCount: widget.questions.length,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ));
   }

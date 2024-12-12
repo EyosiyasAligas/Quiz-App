@@ -197,4 +197,35 @@ class Helper {
       ),
     );
   }
+
+  static String getMonth(int index) {
+    return months[index - 1];
+  }
+
+  static String formatDate(DateTime date) {
+    final now = DateTime.now();
+
+    String formatHour(int hour) {
+      return hour == 0 ? '12' : (hour > 12 ? (hour - 12).toString() : hour.toString());
+    }
+
+    String getPeriod(int hour) {
+      return hour >= 12 ? 'PM' : 'AM';
+    }
+
+    String formattedTime =
+        '${formatHour(date.hour)}:${date.minute.toString().padLeft(2, '0')} ${getPeriod(date.hour)}';
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return 'Today at $formattedTime';
+    } else if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day - 1) {
+      return 'Yesterday at $formattedTime';
+    } else {
+      return '${getMonth(date.month)} ${date.day} at $formattedTime';
+    }
+  }
 }
