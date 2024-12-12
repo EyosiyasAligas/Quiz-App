@@ -8,6 +8,17 @@ enum QuizType {
 
   @override
   String toString() => value!;
+
+  static QuizType fromString(String? value) {
+    switch (value) {
+      case 'Multiple Choice':
+        return multipleChoice;
+      case 'True/False':
+        return trueFalse;
+      default:
+        return any;
+    }
+  }
 }
 
 enum QuizDifficulty {
@@ -21,4 +32,17 @@ enum QuizDifficulty {
 
   @override
   String toString() => value!;
+
+  static QuizDifficulty fromString(String? value) {
+    switch (value) {
+      case 'Easy':
+        return easy;
+      case 'Medium':
+        return medium;
+      case 'Hard':
+        return hard;
+      default:
+        return any;
+    }
+  }
 }

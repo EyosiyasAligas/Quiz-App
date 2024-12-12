@@ -16,7 +16,7 @@ class QuizLocalImplementation implements AbstractQuizLocal {
       final box = Hive.box(categoryBoxKey);
       await box.put(categoriesKey, formattedData);
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 

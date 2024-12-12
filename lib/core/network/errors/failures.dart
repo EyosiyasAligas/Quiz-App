@@ -16,6 +16,11 @@ class ServerFailure extends Failure {
   const ServerFailure(super.errorMessage, this.statusCode);
 }
 
+/// Cache failures
+class CacheFailure extends Failure {
+  const CacheFailure(super.errorMessage);
+}
+
 /// Cancel token failure
 class CancelTokenFailure extends Failure {
   final int? statusCode;

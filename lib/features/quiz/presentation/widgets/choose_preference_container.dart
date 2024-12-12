@@ -293,6 +293,10 @@ class _ChoosePreferenceContainerState extends State<ChoosePreferenceContainer> {
               'category': categoryController.text == 'Any'
                   ? 'Random'
                   : categoryController.text,
+              'type': QuizType.values
+                  .firstWhere((element) => element.value == typeController.text),
+              'difficulty': QuizDifficulty.values
+                  .firstWhere((element) => element.value == difficultyController.text),
             },
           );
         } else if (state is FetchQuestionLoadFailure) {

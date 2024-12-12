@@ -29,3 +29,10 @@ class CancelTokenException implements Exception {
 
   CancelTokenException(this.message, this.statusCode);
 }
+
+///cache exception
+class CacheException implements Exception {
+  final String message;
+
+  CacheException(this.message);
+}

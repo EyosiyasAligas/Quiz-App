@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:quiz_app/features/quiz/domain/entities/quiz_enums.dart';
 import 'package:quiz_app/features/quiz/presentation/bloc/timer/timer_bloc.dart';
 
 import '../../../../core/route/router.dart';
@@ -14,26 +15,35 @@ import '../bloc/fetch_question/fetch_question_bloc.dart';
 import '../widgets/question_card.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen(
-      {super.key, required this.questions, required this.category});
+  const QuizScreen({
+    super.key,
+    required this.questions,
+    required this.category,
+    required this.type,
+    required this.difficulty,
+  });
 
   final List<QuestionEntity> questions;
-
   final String category;
+  final QuizType type;
+  final QuizDifficulty difficulty;
 
   static Route route(RouteSettings routeSettings) {
     final args = routeSettings.arguments as Map<String, dynamic>;
     return MaterialPageRoute(
       builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => sl.get<FetchQuestionBloc>()),
-            BlocProvider(create: (context) => sl.get<TimerBloc>()),
-            BlocProvider(create: (context) => sl.get<AnswerQuestionBloc>()),
-          ],
-          child: QuizScreen(
-            questions: args['questions'],
-            category: args['category'],
-          )),
+        providers: [
+          BlocProvider(create: (context) => sl.get<FetchQuestionBloc>()),
+          BlocProvider(create: (context) => sl.get<TimerBloc>()),
+          BlocProvider(create: (context) => sl.get<AnswerQuestionBloc>()),
+        ],
+        child: QuizScreen(
+          questions: args['questions'],
+          category: args['category'],
+          type: args['type'],
+          difficulty: args['difficulty'],
+        ),
+      ),
     );
   }
 
@@ -71,8 +81,11 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   void _nextQuestion() {
-    if (_currentIndex < widget.questions.length - 1 /*&&
-        widget.questions[_currentIndex].selectedAnswer!.isNotEmpty*/) {
+    if (_currentIndex <
+            widget.questions.length -
+                1 /*&&
+        widget.questions[_currentIndex].selectedAnswer!.isNotEmpty*/
+        ) {
       setState(() {
         _currentIndex++;
         _pageController.nextPage(
@@ -144,6 +157,9 @@ class _QuizScreenState extends State<QuizScreen> {
               arguments: {
                 'score': state.score,
                 'questions': state.questions,
+                'quiz_title': widget.category,
+                'type': widget.type,
+                'difficulty': widget.difficulty,
               },
             );
           }

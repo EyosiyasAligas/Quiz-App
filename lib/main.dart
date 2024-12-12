@@ -6,6 +6,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'core/route/router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/local_storage_constants.dart';
+import 'features/history/presentation/bloc/cache_history/cache_history_bloc.dart';
+import 'features/history/presentation/bloc/fetch_history/fetch_history_bloc.dart';
 import 'features/quiz/presentation/bloc/choose_preference/choose_preference_cubit.dart';
 import 'features/quiz/presentation/bloc/fetch_category/fetch_category_bloc.dart';
 import 'shared/presentation/bloc/theme_mode/theme_mode_cubit.dart';
@@ -20,7 +22,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox(settingsBoxKey);
   await Hive.openBox(categoryBoxKey);
-  await Hive.openBox(categoriesKey);
+  await Hive.openBox(historyBoxKey);
 
   runApp(
     const QuizApp(),
@@ -35,14 +37,23 @@ class QuizApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<FetchCategoryBloc>(
-          create: (context) => sl<FetchCategoryBloc>()..add(const FetchCategory()),
+          create: (context) =>
+              sl<FetchCategoryBloc>()..add(const FetchCategory()),
         ),
         BlocProvider<FetchQuestionBloc>(
-          create: (context) => sl<FetchQuestionBloc>(),
+            create: (context) => sl<FetchQuestionBloc>()),
+        BlocProvider<ThemeModeCubit>(
+          create: (context) => sl<ThemeModeCubit>(),
         ),
-        BlocProvider(create: (context) => sl<ThemeModeCubit>()),
-        BlocProvider(
+        BlocProvider<ChoosePreferenceCubit>(
           create: (context) => sl<ChoosePreferenceCubit>(),
+        ),
+        BlocProvider<FetchHistoryBloc>(
+          create: (context) => sl<FetchHistoryBloc>(),
+        ),
+
+        BlocProvider<CacheHistoryBloc>(
+          create: (context) => sl<CacheHistoryBloc>(),
         ),
       ],
       child: BlocBuilder<ThemeModeCubit, ThemeMode>(

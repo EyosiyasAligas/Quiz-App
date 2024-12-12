@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/features/quiz/presentation/screens/preference_screen.dart';
 
 import '../../../../shared/service_locator.dart';
+import '../../../history/presentation/screens/history_screen.dart';
 import '../bloc/navigation/navigation_cubit.dart';
 import '../widgets/custom_navigation_bar.dart';
 
@@ -28,13 +29,9 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
 
   final _screens = const [
-    const PreferenceScreen(),
-    const Scaffold(
-      body: Center(
-        child: Text('History'),
-      ),
-    ),
-    const Scaffold(
+    PreferenceScreen(),
+    HistoryScreen(),
+    Scaffold(
       body: Center(
         child: Text('Settings'),
       ),
@@ -54,9 +51,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.didChangeDependencies();
     themeData = Theme.of(context);
     _tabController.addListener(() {
-      if (_tabController.indexIsChanging) {
         context.read<NavigationCubit>().changeIndex(_tabController.index);
-      }
     });
   }
 
