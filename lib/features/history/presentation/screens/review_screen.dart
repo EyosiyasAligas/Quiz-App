@@ -17,21 +17,34 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final isLandScape = size.width > size.height; 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Review'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text('Score: ${history.score}'),
-            Text('Total Questions: ${history.totalQuestions}'),
-            Text('Quiz Title: ${history.quizTitle}'),
-            Text('Quiz Type: ${history.type}'),
-            Text('Quiz Difficulty: ${history.difficulty}'),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
+      body: CustomScrollView(
+        slivers: [
+          if (isLandScape)
+            SliverToBoxAdapter(
+              child: buildLandScapeView(),
+            )
+          else
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  buildPreferenceItem('Category', history.quizTitle),
+                  buildPreferenceItem('Difficulty', history.difficulty.value.toString()),
+                  buildPreferenceItem('Type', history.type.value.toString()),
+                  buildPreferenceItem('Total Questions', history.totalQuestions.toString()),
+                  buildPreferenceItem('Score', history.score.toString()),
+                ],
+              ),
+            ),
+          if (!isLandScape)
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
                   final question = history.questions[index];
                   return QuestionCard(
                     isReview: true,
@@ -40,12 +53,53 @@ class ReviewScreen extends StatelessWidget {
                     totalQuestions: history.totalQuestions,
                   );
                 },
-                itemCount: history.totalQuestions,
+                childCount: history.totalQuestions,
               ),
             ),
-          ],
-        ),
+        ],
       ),
+    );
+  }
+  Widget buildPreferenceItem(String title, String value) {
+    return ListTile(
+      title: Text(title),
+      trailing: Text(value),
+    );
+  }
+
+  Widget buildLandScapeView() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: history.totalQuestions,
+            itemBuilder: (context, index) {
+              final question = history.questions[index];
+              return QuestionCard(
+                isReview: true,
+                question: question,
+                index: index,
+                totalQuestions: history.totalQuestions,
+              );
+            },
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              buildPreferenceItem('Category', history.quizTitle),
+              buildPreferenceItem('Difficulty', history.difficulty.value.toString()),
+              buildPreferenceItem('Type', history.type.value.toString()),
+              buildPreferenceItem('Total Questions', history.totalQuestions.toString()),
+              buildPreferenceItem('Score', history.score.toString()),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

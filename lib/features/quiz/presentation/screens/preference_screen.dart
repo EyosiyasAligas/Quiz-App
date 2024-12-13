@@ -40,69 +40,42 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
         key: const Key('appBar'),
         title: const Text('Quiz Preferences'),
       ),
-      body: StreamBuilder<bool>(
-          stream: Helper.checkInternetConnectivity(),
-          builder: (context, snapshot) {
-            return Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  width: size.width,
-                  child: snapshot.data == false
-                      ? Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(8.0),
-                          color:
-                              themeData.colorScheme.secondary.withOpacity(0.3),
-                          child: Text(
-                            'No Internet Connection',
-                            style: themeData.textTheme.bodyMedium!.copyWith(
-                              color: themeData.disabledColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        )
-                      : const SizedBox(),
-                ),
-                BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
-                  key: const Key('fetchCategoryBloc'),
-                  builder: (context, state) {
-                    if (state is FetchCategoryLoadInProgress) {
-                      return Center(
-                        key: const Key('loading'),
-                        child: Lottie.asset(
-                          'assets/json/loading.json',
-                          frameRate: FrameRate.max,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    } else if (state is FetchCategoryLoadSuccess) {
-                      return ChoosePreferenceContainer(
-                        key: const Key('success'),
-                        categoryItems: state.categories,
-                      );
-                    } else if (state is FetchCategoryLoadFailure) {
-                      return Align(
-                        alignment: Alignment.topCenter,
-                        child: ErrorContainer(
-                          key: const Key('error'),
-                          errorMessageText: state.message,
-                          showRetryButton: true,
-                          onTapRetry: () {
-                            context
-                                .read<FetchCategoryBloc>()
-                                .add(const FetchCategory());
-                          },
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-              ],
+      body: BlocBuilder<FetchCategoryBloc, FetchCategoryState>(
+        key: const Key('fetchCategoryBloc'),
+        builder: (context, state) {
+          if (state is FetchCategoryLoadInProgress) {
+            return Center(
+              key: const Key('loading'),
+              child: Lottie.asset(
+                'assets/json/loading.json',
+                frameRate: FrameRate.max,
+                fit: BoxFit.cover,
+              ),
             );
-          }),
+          } else if (state is FetchCategoryLoadSuccess) {
+            return ChoosePreferenceContainer(
+              key: const Key('success'),
+              categoryItems: state.categories,
+            );
+          } else if (state is FetchCategoryLoadFailure) {
+            return Align(
+              alignment: Alignment.topCenter,
+              child: ErrorContainer(
+                key: const Key('error'),
+                errorMessageText: state.message,
+                showRetryButton: true,
+                onTapRetry: () {
+                  context
+                      .read<FetchCategoryBloc>()
+                      .add(const FetchCategory());
+                },
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
 }

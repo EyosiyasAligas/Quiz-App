@@ -18,7 +18,6 @@ class FetchHistoryBloc extends Bloc<FetchHistoryEvent, FetchHistoryState> {
   void fetchHistory(FetchHistory event, Emitter<FetchHistoryState> emit) async {
     emit(FetchHistoryLoading());
     final result = await fetchHistoryUseCase.call(NoParams());
-    print('FetchHistoryBloc: $result');
     result.fold(
       (failure) => emit(FetchHistoryFailure(failure.errorMessage)),
       (historyList) => emit(FetchHistorySuccess(historyList)),

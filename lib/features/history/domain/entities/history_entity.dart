@@ -4,6 +4,8 @@ import '../../../quiz/domain/entities/question_entity.dart';
 import '../../../quiz/domain/entities/quiz_enums.dart';
 
 class HistoryEntity extends Equatable {
+  // id
+  final int? id;
   final String quizTitle;
   final int score;
   final QuizType type;
@@ -13,6 +15,7 @@ class HistoryEntity extends Equatable {
   final DateTime completedAt;
 
   const HistoryEntity({
+    this.id,
     required this.quizTitle,
     required this.score,
     required this.type,

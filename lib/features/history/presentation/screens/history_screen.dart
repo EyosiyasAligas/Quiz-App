@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:quiz_app/core/theme/app_colors.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../../core/route/router.dart';
 import '../../../../core/utils/helper.dart';
@@ -30,6 +29,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     context.read<FetchHistoryBloc>().add(const FetchHistory());
   }
 
@@ -66,7 +66,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               return ListView.builder(
                 itemCount: state.history.length,
                 itemBuilder: (context, index) {
-                  return buildHistoryItem(state.history[index]);
+                  final history = state.history[index];
+                  return buildHistoryItem(history);
                 },
               );
             }
@@ -80,11 +81,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //delete all history from cache
-          final box = Hive.box(historyBoxKey);
-          box.delete(historyKey);
-        },
+        onPressed: () {},
         child: const Icon(Icons.delete_outline),
       ),
     );

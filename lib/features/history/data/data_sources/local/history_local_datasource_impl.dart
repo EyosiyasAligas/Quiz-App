@@ -1,20 +1,28 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:quiz_app/core/network/errors/exceptions.dart';
+import 'package:quiz_app/features/history/data/data_sources/helper/database_helper.dart';
 import 'package:quiz_app/features/history/data/models/history_model.dart';
+import 'package:sqflite/sqflite.dart';
 
-import '../../../../../core/utils/local_storage_constants.dart';
 import 'abstract_history_local_datasource.dart';
 
 class HistoryLocalDatasourceImpl implements AbstractHistoryLocalDataSource {
+  final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
   @override
   Future<void> cacheHistory(HistoryModel history) async {
     try {
-      final box = Hive.box(historyBoxKey);
-      final List<dynamic> historyList = await box.get(historyKey) ?? [];
-      historyList.add(history.toJson());
-      await box.put(historyKey, historyList);
-    } on CacheException catch (e) {
+      print('start cache');
+      final db = await dbHelper.database;
+      final result = await db.insert(
+        DatabaseHelper.tableHistory,
+        history.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      print("Cache History: $result");
+    } on CacheException catch (e, stackTrace) {
+      print("Cache Exception: $e");
+      print("Stack Trace: $stackTrace");
       throw CacheException(e.message);
     } catch (e) {
       rethrow;
@@ -22,12 +30,13 @@ class HistoryLocalDatasourceImpl implements AbstractHistoryLocalDataSource {
   }
 
   @override
-  Future<List<HistoryModel>> fetchHistories() async {
+  Future<List<HistoryModel>> fetchAllHistory() async {
     try {
-      final box = Hive.box(historyBoxKey);
-      final List<dynamic>? historyList = await box.get(historyKey);
+      final db = await dbHelper.database;
+      final List<Map<String, dynamic>> historyList =
+          await db.query(DatabaseHelper.tableHistory);
 
-      if(historyList == null) {
+      if (historyList == null) {
         return [];
       }
       final List<HistoryModel> histories = historyList
@@ -38,8 +47,9 @@ class HistoryLocalDatasourceImpl implements AbstractHistoryLocalDataSource {
     } on CacheException catch (e) {
       throw CacheException(e.message);
     } catch (e, stackTrace) {
+      print('Fetch History Error: $e');
+      print('Stack Trace: $stackTrace');
       rethrow;
     }
   }
-
 }

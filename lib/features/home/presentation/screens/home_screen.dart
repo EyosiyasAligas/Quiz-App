@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:quiz_app/core/utils/helper.dart';
 import 'package:quiz_app/features/quiz/presentation/screens/preference_screen.dart';
 
 import '../../../../shared/service_locator.dart';
@@ -51,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.didChangeDependencies();
     themeData = Theme.of(context);
     _tabController.addListener(() {
-        context.read<NavigationCubit>().changeIndex(_tabController.index);
+      context.read<NavigationCubit>().changeIndex(_tabController.index);
     });
   }
 
@@ -77,10 +79,38 @@ class _HomeScreenState extends State<HomeScreen>
       },
       builder: (context, state) {
         return Scaffold(
-          body: TabBarView(
-            controller: _tabController,
-            children: _screens,
-          ),
+          body: StreamBuilder<bool>(
+              stream: Helper.checkInternetConnectivity(),
+              builder: (context, snapshot) {
+                return Stack(
+                  children: [
+                    TabBarView(
+                      controller: _tabController,
+                      children: _screens,
+                    ),
+                    Positioned(
+                      top: 80,
+                      height: 40,
+                      width: ScreenUtil().screenWidth,
+                      child: snapshot.data == false
+                          ? Container(
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.all(8.0),
+                              color: themeData.colorScheme.secondary
+                                  .withOpacity(0.3),
+                              child: Text(
+                                'No Internet Connection',
+                                style: themeData.textTheme.bodyMedium!.copyWith(
+                                  color: themeData.disabledColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                    ),
+                  ],
+                );
+              }),
           bottomNavigationBar: CustomNavigationBar(
             height: 60,
             selectedIndex: state is NavigationChanged ? state.index : 0,

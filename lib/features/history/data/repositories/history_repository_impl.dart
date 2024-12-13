@@ -27,7 +27,7 @@ class HistoryRepositoryImplementation implements AbstractHistoryRepository {
   @override
   Future<Either<Failure, List<HistoryEntity>>> fetchHistory() async {
     try {
-      final result = await api.fetchHistories();
+      final result = await api.fetchAllHistory();
       return Right(result);
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
