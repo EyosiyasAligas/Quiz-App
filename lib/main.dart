@@ -8,6 +8,7 @@ import 'core/theme/app_theme.dart';
 import 'core/utils/local_storage_constants.dart';
 import 'features/history/presentation/bloc/cache_history/cache_history_bloc.dart';
 import 'features/history/presentation/bloc/fetch_history/fetch_history_bloc.dart';
+import 'features/history/presentation/bloc/filter/filter_cubit.dart';
 import 'features/quiz/presentation/bloc/answer_question/answer_question_bloc.dart';
 import 'features/quiz/presentation/bloc/choose_preference/choose_preference_cubit.dart';
 import 'features/quiz/presentation/bloc/fetch_category/fetch_category_bloc.dart';
@@ -58,6 +59,9 @@ class QuizApp extends StatelessWidget {
         ),
         BlocProvider<AnswerQuestionBloc>(
           create: (context) => sl<AnswerQuestionBloc>(),
+        ),
+        BlocProvider<FilterCubit>(
+          create: (context) => sl<FilterCubit>(),
         ),
       ],
       child: BlocBuilder<ThemeModeCubit, ThemeMode>(

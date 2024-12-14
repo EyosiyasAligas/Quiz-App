@@ -11,4 +11,13 @@ class FetchHistory extends FetchHistoryEvent {
   List<Object> get props => [];
 }
 
+class FetchHistoryByFilter extends FetchHistoryEvent {
+  final FilterParamsEntity filterParams;
+
+  const FetchHistoryByFilter(this.filterParams);
+
+  @override
+  List<Object> get props => [filterParams];
+}
+
 

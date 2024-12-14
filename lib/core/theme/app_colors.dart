@@ -8,7 +8,7 @@ class AppColors {
   static const dark = Color(0xFF1A1A1A);
   static const primary = Color(0xFFB119FB);
   static const secondary = Color(0xFF4993FF);
-  static const lightGray = Color(0xFFdddddd);
+  static const lightGray = Color(0xffededed);
   static const darkGray = Color(0xFF595757);
   static const gray = Color(0xFF9A9A9A);
   static const transparent = Colors.transparent;

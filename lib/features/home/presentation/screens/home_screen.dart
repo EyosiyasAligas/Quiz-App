@@ -79,59 +79,67 @@ class _HomeScreenState extends State<HomeScreen>
       },
       builder: (context, state) {
         return Scaffold(
-          body: StreamBuilder<bool>(
-              stream: Helper.checkInternetConnectivity(),
-              builder: (context, snapshot) {
-                return Stack(
-                  children: [
-                    TabBarView(
-                      controller: _tabController,
-                      children: _screens,
-                    ),
-                    Positioned(
-                      top: 80,
-                      height: 40,
-                      width: ScreenUtil().screenWidth,
-                      child: snapshot.data == false
-                          ? Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8.0),
-                              color: themeData.colorScheme.secondary
-                                  .withOpacity(0.3),
-                              child: Text(
-                                'No Internet Connection',
-                                style: themeData.textTheme.bodyMedium!.copyWith(
-                                  color: themeData.disabledColor,
-                                  fontWeight: FontWeight.w500,
+          resizeToAvoidBottomInset: false,
+          extendBody: true,
+          body: Container(
+            height: ScreenUtil().screenHeight,
+            child: StreamBuilder<bool>(
+                stream: Helper.checkInternetConnectivity(),
+                builder: (context, snapshot) {
+                  return Stack(
+                    children: [
+                      TabBarView(
+                        controller: _tabController,
+                        children: _screens,
+                      ),
+                      Positioned(
+                        top: 80,
+                        height: 40,
+                        width: ScreenUtil().screenWidth,
+                        child: snapshot.data == false
+                            ? Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.all(8.0),
+                                color: themeData.colorScheme.secondary
+                                    .withOpacity(0.3),
+                                child: Text(
+                                  'No Internet Connection',
+                                  style: themeData.textTheme.bodyMedium!.copyWith(
+                                    color: themeData.disabledColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : const SizedBox(),
-                    ),
-                  ],
-                );
-              }),
-          bottomNavigationBar: CustomNavigationBar(
-            height: 60,
-            selectedIndex: state is NavigationChanged ? state.index : 0,
-            iconSize: 24,
-            shadowColor: themeData.colorScheme.primary,
-            surfaceTintColor: themeData.colorScheme.primary.withOpacity(0.9),
-            selectedIconColor: themeData.colorScheme.onSecondary,
-            indicatorColor: themeData.colorScheme.secondary.withOpacity(0.5),
-            onDestinationSelected: (index) {
-              context.read<NavigationCubit>().changeIndex(index);
-            },
-            icons: [
-              Icons.home_filled,
-              Icons.history,
-              Icons.settings_rounded,
-            ],
-            labels: [
-              'Home',
-              'Settings',
-              'Profile',
-            ],
+                              )
+                            : const SizedBox(),
+                      ),
+                    ],
+                  );
+                }),
+          ),
+          bottomNavigationBar: Container(
+            padding: ScreenUtil().screenWidth > ScreenUtil().screenHeight ? const EdgeInsets.symmetric(horizontal: 100) : null,
+            child: CustomNavigationBar(
+              height: 60,
+              selectedIndex: state is NavigationChanged ? state.index : 0,
+              iconSize: 24,
+              shadowColor: themeData.colorScheme.primary,
+              surfaceTintColor: themeData.colorScheme.primary.withOpacity(0.9),
+              selectedIconColor: themeData.colorScheme.onSecondary,
+              indicatorColor: themeData.colorScheme.secondary.withOpacity(0.5),
+              onDestinationSelected: (index) {
+                context.read<NavigationCubit>().changeIndex(index);
+              },
+              icons: const [
+                Icons.home_filled,
+                Icons.history,
+                Icons.settings_rounded,
+              ],
+              labels: const [
+                'Home',
+                'Settings',
+                'Profile',
+              ],
+            ),
           ),
         );
       },

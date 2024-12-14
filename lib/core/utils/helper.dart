@@ -219,13 +219,13 @@ class Helper {
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {
-      return 'Today at $formattedTime';
+      return '$formattedTime Today';
     } else if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day - 1) {
-      return 'Yesterday at $formattedTime';
+      return '$formattedTime Yesterday';
     } else {
-      return '${getMonth(date.month)} ${date.day} at $formattedTime';
+      return '$formattedTime ${getMonth(date.month)} ${date.day}';
     }
   }
 }

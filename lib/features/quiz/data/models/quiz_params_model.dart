@@ -12,8 +12,6 @@ class QuizParamsModel extends QuizParams {
   Map<String, dynamic> toQueryParameters() {
     final Map<String, dynamic> queryParams = {};
 
-
-
     if (amount != null) queryParams['amount'] = amount;
     if (categoryId != null && categoryId != -1) queryParams['category'] = categoryId;
     if (difficulty != null && difficulty?.value != 'Any') queryParams['difficulty'] = difficulty?.value!.toLowerCase();

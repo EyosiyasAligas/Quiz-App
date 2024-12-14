@@ -6,9 +6,11 @@ import '../features/history/data/data_sources/local/history_local_datasource_imp
 import '../features/history/data/repositories/history_repository_impl.dart';
 import '../features/history/domain/repositories/abstract_history_repository.dart';
 import '../features/history/domain/usecases/cache_history_usecase.dart';
+import '../features/history/domain/usecases/fetch_history_by_filter_usecase.dart';
 import '../features/history/domain/usecases/fetch_history_usecase.dart';
 import '../features/history/presentation/bloc/cache_history/cache_history_bloc.dart';
 import '../features/history/presentation/bloc/fetch_history/fetch_history_bloc.dart';
+import '../features/history/presentation/bloc/filter/filter_cubit.dart';
 import '../features/home/presentation/bloc/navigation/navigation_cubit.dart';
 import '../features/quiz/data/data_sources/local/quiz_local_impl.dart';
 import '../features/quiz/data/repositories/ticker_repository_impl.dart';
@@ -51,6 +53,7 @@ Future<void> initAppInjections() async {
   sl.registerSingleton<FetchQuizUseCase>(FetchQuizUseCase(sl<AbstractQuizRepository>()));
   sl.registerSingleton<TickerUseCase>(TickerUseCase(sl<AbstractTickerRepository>()));
   sl.registerSingleton<FetchHistoryUseCase>(FetchHistoryUseCase(sl<AbstractHistoryRepository>()));
+  sl.registerSingleton<FetchHistoryByFilterUseCase>(FetchHistoryByFilterUseCase(sl<AbstractHistoryRepository>()));
   sl.registerSingleton<CacheHistoryUseCase>(CacheHistoryUseCase(sl<AbstractHistoryRepository>()));
 
   // Bloc
@@ -62,6 +65,7 @@ Future<void> initAppInjections() async {
   sl.registerFactory<SubmitQuizBloc>(() => SubmitQuizBloc());
   sl.registerFactory<TimerBloc>(() => TimerBloc(sl<TickerUseCase>()));
   sl.registerFactory<AnswerQuestionBloc>(() => AnswerQuestionBloc());
-  sl.registerFactory<FetchHistoryBloc>(() => FetchHistoryBloc(sl<FetchHistoryUseCase>()));
+  sl.registerFactory<FetchHistoryBloc>(() => FetchHistoryBloc(sl<FetchHistoryUseCase>(), sl<FetchHistoryByFilterUseCase>()));
   sl.registerFactory<CacheHistoryBloc>(() => CacheHistoryBloc(sl<CacheHistoryUseCase>()));
+  sl.registerFactory<FilterCubit>(() => FilterCubit());
 }
